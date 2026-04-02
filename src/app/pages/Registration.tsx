@@ -213,7 +213,13 @@ export default function Registration() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          Need help? Contact us at support@digitalartacademy.com
+          Need help? Contact us at{" "}
+          <a
+            href="mailto:digitalartacademy@gmail.com"
+            className="text-slate-300 hover:text-white underline underline-offset-2"
+          >
+            digitalartacademy@gmail.com
+          </a>
         </motion.p>
       </div>
     </div>

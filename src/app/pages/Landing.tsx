@@ -52,7 +52,9 @@ export default function Landing() {
             transition={{ delay: 0.2 }}
           >
             <Sparkles className="w-4 h-4 text-purple-400" />
-            <span className="text-sm text-purple-300">Enrollment Open for 2026</span>
+            <span className="text-sm text-purple-300">
+              Registrations open for classes starting 2 May
+            </span>
           </motion.div>
           
           <h1 className="text-5xl sm:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
@@ -135,7 +137,7 @@ export default function Landing() {
         >
           <p className="text-slate-400 text-sm">
             Registration is MWK {registrationFee.toLocaleString()} (due upon registration) • Course fee is MWK{" "}
-            {courseFee.toLocaleString()} (due when the course starts) • Flexible schedules • Expert instructors • Hands-on projects
+            {courseFee.toLocaleString()} (due when the course starts) • Expert instructors • Hands-on projects
           </p>
         </motion.div>
       </div>

@@ -161,7 +161,7 @@ export default function DepartmentCourses() {
           transition={{ delay: 0.5 }}
         >
           <p className="text-slate-300 text-center">
-            <span className="font-semibold text-white">Not sure which course to choose?</span> All courses include flexible scheduling, 
+            <span className="font-semibold text-white">Not sure which course to choose?</span> All courses include
             lifetime access to course materials, and ongoing instructor support.
           </p>
         </motion.div>

@@ -50,7 +50,7 @@ export function PersonalInfoStep({ data, updateData }: StepProps) {
           Age Range <span className="text-red-400">*</span>
         </label>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {["Under 18", "18-24", "25-34", "35+"].map((range) => (
+          {["11-17", "18-24", "25-34", "35+"].map((range) => (
             <label
               key={range}
               className={`flex items-center justify-center px-4 py-3 border-2 rounded-xl cursor-pointer transition-all ${
@@ -77,8 +77,8 @@ export function PersonalInfoStep({ data, updateData }: StepProps) {
         <label className="block text-sm font-medium text-slate-300 mb-3">
           Sex <span className="text-red-400">*</span>
         </label>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {["Male", "Female", "Other"].map((sex) => (
+        <div className="grid grid-cols-2 gap-3">
+          {["Male", "Female"].map((sex) => (
             <label
               key={sex}
               className={`flex items-center justify-center px-4 py-3 border-2 rounded-xl cursor-pointer transition-all ${
