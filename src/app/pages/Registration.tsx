@@ -12,7 +12,15 @@ import {
   MarketingStep,
   ConfirmationStep,
 } from "../components/RegistrationSteps";
-import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
+import { useRegistrationSubmission } from "@/hooks/useRegistrationSubmission";
+import {
+  availabilityDayNamesToIds,
+  fetchAvailabilityDays,
+  fetchSoftwareOptions,
+  softwareLabelsToIds,
+} from "@/lib/registration/reference-data";
+import { registrationDataToInsert } from "@/lib/registration/transforms";
 
 export default function Registration() {
   const { departmentId, courseId } = useParams<{ departmentId: string; courseId: string }>();
@@ -24,6 +32,13 @@ export default function Registration() {
     courseId: courseId || "",
   });
 
+  const {
+    isSubmitting,
+    error: submitError,
+    submitRegistration,
+    resetSubmissionState,
+  } = useRegistrationSubmission();
+
   const department = getDepartmentById(departmentId || "");
   const course = getCourseById(departmentId || "", courseId || "");
 
@@ -31,15 +46,41 @@ export default function Registration() {
 
   const updateData = (updates: Partial<RegistrationData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
+    resetSubmissionState();
   };
 
   const nextStep = () => {
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
-    } else {
-      // Navigate to payment page
-      navigate("/payment", { state: { formData, course, department } });
     }
+  };
+
+  const proceedToPayment = async () => {
+    try {
+      const payload = registrationDataToInsert(formData);
+      const [softwareRows, dayRows] = await Promise.all([
+        fetchSoftwareOptions(),
+        fetchAvailabilityDays(),
+      ]);
+      const softwareIds = softwareLabelsToIds(softwareRows, formData.softwareUsed ?? []);
+      const dayIds = availabilityDayNamesToIds(dayRows, formData.availableDays ?? []);
+
+      const { registration } = await submitRegistration(payload, softwareIds, dayIds);
+
+      navigate("/payment", {
+        state: { formData, course, department, registrationId: registration.id },
+      });
+    } catch {
+      /* Hook stores a readable error message in submitError */
+    }
+  };
+
+  const handlePrimaryAction = () => {
+    if (currentStep < totalSteps) {
+      nextStep();
+      return;
+    }
+    void proceedToPayment();
   };
 
   const prevStep = () => {
@@ -165,6 +206,14 @@ export default function Registration() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
+          {submitError && currentStep === totalSteps ? (
+            <div
+              className="mb-6 rounded-xl border border-red-500/40 bg-red-950/40 px-4 py-3 text-sm text-red-100"
+              role="alert"
+            >
+              {submitError}
+            </div>
+          ) : null}
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
@@ -196,13 +245,26 @@ export default function Registration() {
           </motion.button>
 
           <motion.button
-            onClick={nextStep}
-            className={`flex items-center gap-2 px-8 py-3 bg-gradient-to-r ${department.gradient} text-white font-semibold rounded-xl hover:shadow-lg transition-all`}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            type="button"
+            onClick={handlePrimaryAction}
+            disabled={currentStep === totalSteps && isSubmitting}
+            className={`flex items-center gap-2 px-8 py-3 bg-gradient-to-r ${department.gradient} text-white font-semibold rounded-xl hover:shadow-lg transition-all ${
+              currentStep === totalSteps && isSubmitting ? "opacity-70 cursor-wait" : ""
+            }`}
+            whileHover={currentStep === totalSteps && isSubmitting ? {} : { scale: 1.02 }}
+            whileTap={currentStep === totalSteps && isSubmitting ? {} : { scale: 0.98 }}
           >
-            <span>{currentStep === totalSteps ? "Proceed to Payment" : "Next"}</span>
-            <ArrowRight className="w-5 h-5" />
+            {currentStep === totalSteps && isSubmitting ? (
+              <>
+                <Loader2 className="w-5 h-5 shrink-0 animate-spin" aria-hidden />
+                <span>Saving registration…</span>
+              </>
+            ) : (
+              <>
+                <span>{currentStep === totalSteps ? "Proceed to Payment" : "Next"}</span>
+                <ArrowRight className="w-5 h-5 shrink-0" />
+              </>
+            )}
           </motion.button>
         </div>
 
