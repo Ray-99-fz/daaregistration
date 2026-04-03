@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useNavigate, useParams } from "react-router";
 import { getDepartmentById, getCourseById } from "../data/departments";
@@ -12,32 +12,33 @@ import {
   MarketingStep,
   ConfirmationStep,
 } from "../components/RegistrationSteps";
-import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
-import { useRegistrationSubmission } from "@/hooks/useRegistrationSubmission";
-import {
-  availabilityDayNamesToIds,
-  fetchAvailabilityDays,
-  fetchSoftwareOptions,
-  softwareLabelsToIds,
-} from "@/lib/registration/reference-data";
-import { registrationDataToInsert } from "@/lib/registration/transforms";
+import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { useAutosaveForm } from "@/hooks/useAutosaveForm";
 
 export default function Registration() {
   const { departmentId, courseId } = useParams<{ departmentId: string; courseId: string }>();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<RegistrationData>({
-    ...initialRegistrationData,
-    departmentId: departmentId || "",
-    courseId: courseId || "",
+  const formMethods = useForm<RegistrationData>({
+    defaultValues: {
+      ...initialRegistrationData,
+      departmentId: departmentId || "",
+      courseId: courseId || "",
+    },
   });
+  const { watch, setValue } = formMethods;
+  useAutosaveForm(formMethods);
+  const formData = watch();
 
-  const {
-    isSubmitting,
-    error: submitError,
-    submitRegistration,
-    resetSubmissionState,
-  } = useRegistrationSubmission();
+  useEffect(() => {
+    if (departmentId) {
+      setValue("departmentId", departmentId, { shouldDirty: true });
+    }
+    if (courseId) {
+      setValue("courseId", courseId, { shouldDirty: true });
+    }
+  }, [courseId, departmentId, setValue]);
 
   const department = getDepartmentById(departmentId || "");
   const course = getCourseById(departmentId || "", courseId || "");
@@ -45,8 +46,9 @@ export default function Registration() {
   const totalSteps = 7;
 
   const updateData = (updates: Partial<RegistrationData>) => {
-    setFormData((prev) => ({ ...prev, ...updates }));
-    resetSubmissionState();
+    for (const [key, value] of Object.entries(updates) as [keyof RegistrationData, RegistrationData[keyof RegistrationData]][]) {
+      setValue(key, value, { shouldDirty: true, shouldTouch: true });
+    }
   };
 
   const nextStep = () => {
@@ -56,23 +58,9 @@ export default function Registration() {
   };
 
   const proceedToPayment = async () => {
-    try {
-      const payload = registrationDataToInsert(formData);
-      const [softwareRows, dayRows] = await Promise.all([
-        fetchSoftwareOptions(),
-        fetchAvailabilityDays(),
-      ]);
-      const softwareIds = softwareLabelsToIds(softwareRows, formData.softwareUsed ?? []);
-      const dayIds = availabilityDayNamesToIds(dayRows, formData.availableDays ?? []);
-
-      const { registration } = await submitRegistration(payload, softwareIds, dayIds);
-
-      navigate("/payment", {
-        state: { formData, course, department, registrationId: registration.id },
-      });
-    } catch {
-      /* Hook stores a readable error message in submitError */
-    }
+    navigate("/payment", {
+      state: { formData, course, department },
+    });
   };
 
   const handlePrimaryAction = () => {
@@ -206,14 +194,6 @@ export default function Registration() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          {submitError && currentStep === totalSteps ? (
-            <div
-              className="mb-6 rounded-xl border border-red-500/40 bg-red-950/40 px-4 py-3 text-sm text-red-100"
-              role="alert"
-            >
-              {submitError}
-            </div>
-          ) : null}
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
@@ -228,14 +208,14 @@ export default function Registration() {
         </motion.div>
 
         {/* Navigation Buttons */}
-        <div className="flex justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
           <motion.button
             onClick={prevStep}
             disabled={currentStep === 1}
-            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all ${
+            className={`w-full sm:w-auto whitespace-nowrap min-h-11 px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base md:text-lg rounded-xl font-semibold flex items-center justify-center gap-2 transition-all active:scale-[0.99] ${
               currentStep === 1
                 ? "bg-slate-800 text-slate-600 cursor-not-allowed"
-                : "bg-slate-800 text-white hover:bg-slate-700"
+                : "bg-slate-800 text-white hover:bg-slate-700 hover:shadow-lg"
             }`}
             whileHover={currentStep !== 1 ? { scale: 1.02 } : {}}
             whileTap={currentStep !== 1 ? { scale: 0.98 } : {}}
@@ -247,24 +227,15 @@ export default function Registration() {
           <motion.button
             type="button"
             onClick={handlePrimaryAction}
-            disabled={currentStep === totalSteps && isSubmitting}
-            className={`flex items-center gap-2 px-8 py-3 bg-gradient-to-r ${department.gradient} text-white font-semibold rounded-xl hover:shadow-lg transition-all ${
-              currentStep === totalSteps && isSubmitting ? "opacity-70 cursor-wait" : ""
-            }`}
-            whileHover={currentStep === totalSteps && isSubmitting ? {} : { scale: 1.02 }}
-            whileTap={currentStep === totalSteps && isSubmitting ? {} : { scale: 0.98 }}
+            className={`w-full sm:w-auto whitespace-nowrap min-h-11 px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base md:text-lg bg-gradient-to-r ${department.gradient} text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2 hover:shadow-lg active:scale-[0.99]`}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            {currentStep === totalSteps && isSubmitting ? (
-              <>
-                <Loader2 className="w-5 h-5 shrink-0 animate-spin" aria-hidden />
-                <span>Saving registration…</span>
-              </>
-            ) : (
-              <>
-                <span>{currentStep === totalSteps ? "Proceed to Payment" : "Next"}</span>
-                <ArrowRight className="w-5 h-5 shrink-0" />
-              </>
-            )}
+            <>
+              <span className="sm:hidden">{currentStep === totalSteps ? "Continue" : "Next"}</span>
+              <span className="hidden sm:inline">{currentStep === totalSteps ? "Proceed to Payment" : "Next"}</span>
+              <ArrowRight className="w-5 h-5 shrink-0" />
+            </>
           </motion.button>
         </div>
 

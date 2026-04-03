@@ -33,7 +33,7 @@ export function useRegistrationSubmission() {
     setSuccess(false);
   }, []);
 
-  const submitRegistration = useCallback(
+  const submitFinalRegistration = useCallback(
     async (
       formData: RegistrationInsert,
       softwareIds: SoftwareSelectionInput,
@@ -50,6 +50,12 @@ export function useRegistrationSubmission() {
         setSuccess(true);
         return { registration };
       } catch (e) {
+        console.error("Registration submission failed:", {
+          error: e,
+          payload: formData,
+          softwareIds,
+          dayIds,
+        });
         const message = toUserMessage(e);
         setError(message);
         throw e;
@@ -64,7 +70,7 @@ export function useRegistrationSubmission() {
     isSubmitting,
     error,
     success,
-    submitRegistration,
+    submitFinalRegistration,
     resetSubmissionState,
   };
 }

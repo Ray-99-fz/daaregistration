@@ -43,10 +43,10 @@ export default function NotFound() {
           Oops! The page you're looking for doesn't exist or has been moved.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <motion.button
             onClick={() => navigate(-1)}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-slate-800 text-white font-semibold rounded-xl hover:bg-slate-700 transition-all"
+            className="w-full sm:w-auto whitespace-nowrap min-h-11 px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base md:text-lg bg-slate-800 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2 hover:bg-slate-700 hover:shadow-lg active:scale-[0.99]"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -56,7 +56,7 @@ export default function NotFound() {
 
           <motion.button
             onClick={() => navigate("/")}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all"
+            className="w-full sm:w-auto whitespace-nowrap min-h-11 px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base md:text-lg bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2 hover:shadow-lg active:scale-[0.99]"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

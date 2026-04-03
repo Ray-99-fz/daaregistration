@@ -1,15 +1,36 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { useLocation, useNavigate } from "react-router";
-import { CheckCircle2, CreditCard, Shield, Clock } from "lucide-react";
-import { courseFee, registrationFee } from "../data/departments";
+import { CheckCircle2, CreditCard, Loader2, Shield, Clock } from "lucide-react";
+import { courseFee, registrationFee, type Course, type Department } from "../data/departments";
+import type { RegistrationData } from "../types/registration";
+import { registrationDataToInsert } from "@/lib/registration/transforms";
+import {
+  availabilityDayNamesToIds,
+  fetchAvailabilityDays,
+  fetchSoftwareOptions,
+  softwareLabelsToIds,
+} from "@/lib/registration/reference-data";
+import { useRegistrationSubmission } from "@/hooks/useRegistrationSubmission";
+import { REGISTRATION_FORM_DATA_KEY } from "@/hooks/useAutosaveForm";
 
 export default function Payment() {
   const location = useLocation();
   const navigate = useNavigate();
   const [paymentComplete, setPaymentComplete] = useState(false);
-  
-  const { formData, course, department } = location.state || {};
+  const [paymentMessage, setPaymentMessage] = useState<string | null>(null);
+
+  const {
+    isSubmitting,
+    error: submitError,
+    success,
+    submitFinalRegistration,
+  } = useRegistrationSubmission();
+
+  const { formData, course, department } =
+    (location.state as
+      | { formData?: RegistrationData; course?: Course; department?: Department }
+      | null) || {};
 
   if (!formData || !course || !department) {
     return (
@@ -27,11 +48,35 @@ export default function Payment() {
     );
   }
 
-  const handlePayment = () => {
-    // Simulate payment processing
-    setTimeout(() => {
+  const handlePayment = async () => {
+    setPaymentMessage(null);
+
+    try {
+      const rawStored = localStorage.getItem(REGISTRATION_FORM_DATA_KEY);
+      const storedFormData = rawStored ? (JSON.parse(rawStored) as RegistrationData) : null;
+      const activeFormData = formData ?? storedFormData;
+
+      if (!activeFormData) {
+        throw new Error("Registration details are missing. Please return to the registration form.");
+      }
+
+      const payload = registrationDataToInsert(activeFormData);
+      const [softwareRows, dayRows] = await Promise.all([fetchSoftwareOptions(), fetchAvailabilityDays()]);
+      const softwareIds = softwareLabelsToIds(softwareRows, activeFormData.softwareUsed ?? []);
+      const dayIds = availabilityDayNamesToIds(dayRows, activeFormData.availableDays ?? []);
+
+      const { registration } = await submitFinalRegistration(payload, softwareIds, dayIds);
+      console.info("Registration submitted successfully:", {
+        registrationId: registration.id,
+        softwareIds,
+        dayIds,
+      });
+      setPaymentMessage("Registration confirmed. You can now proceed with payment.");
       setPaymentComplete(true);
-    }, 1500);
+    } catch (error) {
+      console.error("Failed to submit final registration from payment page:", error);
+      setPaymentMessage("We couldn't complete your registration. Please try again.");
+    }
   };
 
   if (paymentComplete) {
@@ -290,19 +335,44 @@ export default function Payment() {
           </motion.div>
 
           {/* Payment Button */}
+          {(submitError || paymentMessage) && (
+            <div
+              className={`mb-4 rounded-xl border px-4 py-3 text-sm ${
+                submitError
+                  ? "border-red-500/40 bg-red-950/40 text-red-100"
+                  : "border-emerald-500/40 bg-emerald-950/40 text-emerald-100"
+              }`}
+              role="alert"
+            >
+              {submitError ?? paymentMessage}
+            </div>
+          )}
           <motion.button
             onClick={handlePayment}
-            className={`w-full py-5 px-8 bg-gradient-to-r ${department.gradient} text-white text-xl font-bold rounded-xl hover:shadow-2xl transition-all flex items-center justify-center gap-3`}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            disabled={isSubmitting || success}
+            className={`w-full sm:w-auto whitespace-nowrap min-h-12 px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base md:text-lg bg-gradient-to-r ${department.gradient} text-white font-bold rounded-xl transition-all flex items-center justify-center gap-3 hover:shadow-2xl active:scale-[0.99] disabled:opacity-70 disabled:cursor-not-allowed`}
+            whileHover={isSubmitting || success ? {} : { scale: 1.02 }}
+            whileTap={isSubmitting || success ? {} : { scale: 0.98 }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <CreditCard className="w-6 h-6" />
-            <span>
-              Pay with PayChangu - MWK {registrationFee.toLocaleString()} (registration fee)
-            </span>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-6 h-6 animate-spin" />
+                <span>Submitting registration...</span>
+              </>
+            ) : (
+              <>
+                <CreditCard className="w-6 h-6" />
+                <span className="sm:hidden">
+                  Pay with PayChangu
+                </span>
+                <span className="hidden sm:inline">
+                  Pay with PayChangu - MWK {registrationFee.toLocaleString()} (registration fee)
+                </span>
+              </>
+            )}
           </motion.button>
 
           {/* Reassurance */}

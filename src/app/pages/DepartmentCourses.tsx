@@ -133,7 +133,7 @@ export default function DepartmentCourses() {
                 <div className="space-y-3">
                   <motion.button
                     onClick={() => navigate(`/register/${departmentId}/${course.id}`)}
-                    className={`w-full py-3 px-6 bg-gradient-to-r ${department.gradient} text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300`}
+                    className={`w-full sm:w-auto whitespace-nowrap min-h-11 px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base md:text-lg bg-gradient-to-r ${department.gradient} text-white font-semibold rounded-xl transition-all duration-300 flex items-center justify-center hover:shadow-lg active:scale-[0.99]`}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -142,7 +142,7 @@ export default function DepartmentCourses() {
 
                   <a
                     href={course.overviewUrl}
-                    className="flex items-center justify-center gap-2 w-full py-3 px-6 border border-slate-700 text-slate-300 font-medium rounded-xl hover:bg-slate-800 hover:text-white transition-all duration-300"
+                    className="w-full sm:w-auto whitespace-nowrap min-h-11 px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base md:text-lg border border-slate-700 text-slate-300 font-medium rounded-xl transition-all duration-300 flex items-center justify-center gap-2 hover:bg-slate-800 hover:text-white hover:shadow-lg active:scale-[0.99]"
                   >
                     <span>View Overview</span>
                     <ExternalLink className="w-4 h-4" />

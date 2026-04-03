@@ -115,7 +115,7 @@ export default function Landing() {
                   {/* CTA Button */}
                   <motion.button
                     onClick={() => navigate(`/department/${department.id}`)}
-                    className="relative w-full py-4 px-6 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white font-semibold flex items-center justify-center gap-2 hover:bg-white/20 transition-all duration-300 group/btn"
+                    className="relative w-full sm:w-auto whitespace-nowrap min-h-12 px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base md:text-lg bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white font-semibold flex items-center justify-center gap-2 hover:bg-white/20 hover:shadow-lg active:scale-[0.99] transition-all duration-300 group/btn"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
