@@ -1,0 +1,137 @@
+import { useState } from "react";
+import { motion } from "motion/react";
+import { CreditCard, Loader2 } from "lucide-react";
+import { courseFee, registrationFee } from "../data/departments";
+import type { RegistrationData } from "../types/registration";
+import type { RegistrationFormData } from "@/lib/registration/registration-form.types";
+import { getValidationErrors, validateForm } from "@/lib/registration/registration-validation";
+import { submitRegistration } from "@/lib/registration/submit-registration";
+
+type ConfirmationStepProps = {
+  data: RegistrationData;
+};
+
+function toFormData(data: RegistrationData): RegistrationFormData {
+  const { departmentId: _d, courseId: _c, ...rest } = data;
+  return rest;
+}
+
+export function ConfirmationStep({ data }: ConfirmationStepProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  const handlePay = async () => {
+    if (isSubmitting || success) return;
+
+    setError(null);
+    const form = toFormData(data);
+    if (!validateForm(form)) {
+      setError(getValidationErrors(form).join("\n"));
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const result = await submitRegistration(form);
+      if (result.ok) {
+        setSuccess(true);
+      } else {
+        setError(result.message);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-3xl font-bold text-white mb-2">Confirm Your Registration</h2>
+        <p className="text-slate-400">Review your details before completing payment</p>
+      </div>
+
+      <div className="space-y-4">
+        <div className="p-6 bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl">
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <h3 className="text-xl font-bold text-white mb-1">Selected Course</h3>
+              <p className="text-slate-300">Registration fee (due upon registration)</p>
+            </div>
+            <div className="text-right">
+              <div className="text-3xl font-bold text-white">MWK {registrationFee.toLocaleString()}</div>
+            </div>
+          </div>
+          <p className="text-sm text-slate-400">Course fee: MWK {courseFee.toLocaleString()} (due at course start)</p>
+        </div>
+
+        <div className="p-6 bg-slate-900/50 border border-slate-700 rounded-xl space-y-4">
+          <div>
+            <h4 className="text-sm font-medium text-slate-400 mb-1">Name</h4>
+            <p className="text-white">
+              {data.firstName} {data.lastName}
+            </p>
+          </div>
+          <div>
+            <h4 className="text-sm font-medium text-slate-400 mb-1">Email</h4>
+            <p className="text-white">{data.email}</p>
+          </div>
+          <div>
+            <h4 className="text-sm font-medium text-slate-400 mb-1">Phone</h4>
+            <p className="text-white">{data.phone}</p>
+          </div>
+          <div>
+            <h4 className="text-sm font-medium text-slate-400 mb-1">City</h4>
+            <p className="text-white">{data.city}</p>
+          </div>
+        </div>
+
+        <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+          <p className="text-sm text-blue-200">
+            By paying, you agree to our terms and conditions. Your registration will be saved securely.
+          </p>
+        </div>
+
+        {error && (
+          <div
+            className="rounded-xl border border-red-500/40 bg-red-950/40 px-4 py-3 text-sm text-red-100 whitespace-pre-line"
+            role="alert"
+          >
+            {error}
+          </div>
+        )}
+
+        {success && (
+          <div
+            className="rounded-xl border border-emerald-500/40 bg-emerald-950/40 px-4 py-3 text-sm text-emerald-100"
+            role="status"
+          >
+            Registration submitted successfully. Thank you — we will contact you at {data.email}.
+          </div>
+        )}
+
+        <motion.button
+          type="button"
+          onClick={handlePay}
+          disabled={isSubmitting || success}
+          aria-busy={isSubmitting}
+          className="w-full sm:w-auto whitespace-nowrap min-h-12 px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base md:text-lg font-bold rounded-xl transition-all flex items-center justify-center gap-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:shadow-2xl active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
+          whileHover={isSubmitting || success ? {} : { scale: 1.02 }}
+          whileTap={isSubmitting || success ? {} : { scale: 0.98 }}
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="w-6 h-6 animate-spin shrink-0" aria-hidden />
+              <span>Processing…</span>
+            </>
+          ) : (
+            <>
+              <CreditCard className="w-6 h-6 shrink-0" aria-hidden />
+              <span>Pay with Pay Changu</span>
+            </>
+          )}
+        </motion.button>
+      </div>
+    </div>
+  );
+}

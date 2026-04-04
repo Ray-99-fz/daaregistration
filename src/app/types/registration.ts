@@ -1,36 +1,9 @@
-export interface RegistrationData {
-  // Personal Information
-  firstName: string;
-  lastName: string;
-  ageRange: string;
-  sex: string;
-  city: string;
-  email: string;
-  phone: string;
+import type { RegistrationFormData } from "@/lib/registration/registration-form.types";
 
-  // Current Status
-  status: string;
-  educationLevel: string;
+export type { RegistrationFormData };
 
-  // Digital Art Experience
-  familiarWith3D: string;
-  softwareUsed: string[];
-  familiarWithPhotoshop: string;
-
-  // Equipment
-  hasGraphicsTablet: string;
-  tabletBrand: string;
-  deviceUsed: string;
-
-  // Availability & Internet
-  availableDays: string[];
-  hasInternet: string;
-
-  // Marketing Info
-  howHeardAbout: string;
-  optInForUpdates: boolean;
-
-  // Course Info
+/** Full wizard state: form fields + route context (not sent to `registrations` in mapToDatabaseFormat). */
+export interface RegistrationData extends RegistrationFormData {
   departmentId: string;
   courseId: string;
 }

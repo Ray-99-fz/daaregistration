@@ -1,5 +1,5 @@
-import { courseFee, registrationFee } from "../data/departments";
 import { RegistrationData } from "../types/registration";
+import type { RegistrationFormData } from "@/lib/registration/registration-form.types";
 
 interface StepProps {
   data: RegistrationData;
@@ -359,7 +359,11 @@ export function EquipmentStep({ data, updateData }: StepProps) {
                 name="hasGraphicsTablet"
                 value={option}
                 checked={data.hasGraphicsTablet === option}
-                onChange={(e) => updateData({ hasGraphicsTablet: e.target.value })}
+                onChange={(e) =>
+                  updateData({
+                    hasGraphicsTablet: e.target.value as RegistrationFormData["hasGraphicsTablet"],
+                  })
+                }
                 className="sr-only"
               />
               <span className="text-sm font-medium">{option}</span>
@@ -479,7 +483,9 @@ export function AvailabilityStep({ data, updateData }: StepProps) {
                 name="hasInternet"
                 value={option}
                 checked={data.hasInternet === option}
-                onChange={(e) => updateData({ hasInternet: e.target.value })}
+                onChange={(e) =>
+                  updateData({ hasInternet: e.target.value as RegistrationFormData["hasInternet"] })
+                }
                 className="sr-only"
               />
               <span className="text-sm font-medium">{option}</span>
@@ -554,62 +560,6 @@ export function MarketingStep({ data, updateData }: StepProps) {
             </p>
           </div>
         </label>
-      </div>
-    </div>
-  );
-}
-
-// Step 7: Course Confirmation
-export function ConfirmationStep({ data }: StepProps) {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold text-white mb-2">Confirm Your Registration</h2>
-        <p className="text-slate-400">Review your details before proceeding to payment</p>
-      </div>
-
-      <div className="space-y-4">
-        <div className="p-6 bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl">
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <h3 className="text-xl font-bold text-white mb-1">Selected Course</h3>
-              <p className="text-slate-300">Registration fee (due upon registration)</p>
-            </div>
-            <div className="text-right">
-                  <div className="text-3xl font-bold text-white">
-                    MWK {registrationFee.toLocaleString()}
-                  </div>
-            </div>
-          </div>
-          <p className="text-sm text-slate-400">
-                Course fee: MWK {courseFee.toLocaleString()} (due at course start)
-          </p>
-        </div>
-
-        <div className="p-6 bg-slate-900/50 border border-slate-700 rounded-xl space-y-4">
-          <div>
-            <h4 className="text-sm font-medium text-slate-400 mb-1">Name</h4>
-            <p className="text-white">{data.firstName} {data.lastName}</p>
-          </div>
-          <div>
-            <h4 className="text-sm font-medium text-slate-400 mb-1">Email</h4>
-            <p className="text-white">{data.email}</p>
-          </div>
-          <div>
-            <h4 className="text-sm font-medium text-slate-400 mb-1">Phone</h4>
-            <p className="text-white">{data.phone}</p>
-          </div>
-          <div>
-            <h4 className="text-sm font-medium text-slate-400 mb-1">City</h4>
-            <p className="text-white">{data.city}</p>
-          </div>
-        </div>
-
-        <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
-          <p className="text-sm text-blue-200">
-            By proceeding, you agree to our terms and conditions. You will receive a confirmation email after payment.
-          </p>
-        </div>
       </div>
     </div>
   );

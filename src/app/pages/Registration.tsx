@@ -10,8 +10,8 @@ import {
   EquipmentStep,
   AvailabilityStep,
   MarketingStep,
-  ConfirmationStep,
 } from "../components/RegistrationSteps";
+import { ConfirmationStep } from "../components/ConfirmationStep";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useAutosaveForm } from "@/hooks/useAutosaveForm";
@@ -57,18 +57,10 @@ export default function Registration() {
     }
   };
 
-  const proceedToPayment = async () => {
-    navigate("/payment", {
-      state: { formData, course, department },
-    });
-  };
-
   const handlePrimaryAction = () => {
     if (currentStep < totalSteps) {
       nextStep();
-      return;
     }
-    void proceedToPayment();
   };
 
   const prevStep = () => {
@@ -224,19 +216,21 @@ export default function Registration() {
             <span>Previous</span>
           </motion.button>
 
-          <motion.button
-            type="button"
-            onClick={handlePrimaryAction}
-            className={`w-full sm:w-auto whitespace-nowrap min-h-11 px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base md:text-lg bg-gradient-to-r ${department.gradient} text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2 hover:shadow-lg active:scale-[0.99]`}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <>
-              <span className="sm:hidden">{currentStep === totalSteps ? "Continue" : "Next"}</span>
-              <span className="hidden sm:inline">{currentStep === totalSteps ? "Proceed to Payment" : "Next"}</span>
-              <ArrowRight className="w-5 h-5 shrink-0" />
-            </>
-          </motion.button>
+          {currentStep < totalSteps ? (
+            <motion.button
+              type="button"
+              onClick={handlePrimaryAction}
+              className={`w-full sm:w-auto whitespace-nowrap min-h-11 px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base md:text-lg bg-gradient-to-r ${department.gradient} text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2 hover:shadow-lg active:scale-[0.99]`}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <>
+                <span className="sm:hidden">Next</span>
+                <span className="hidden sm:inline">Next</span>
+                <ArrowRight className="w-5 h-5 shrink-0" />
+              </>
+            </motion.button>
+          ) : null}
         </div>
 
         {/* Help Text */}
