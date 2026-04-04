@@ -4,6 +4,9 @@ export interface Course {
   description: string;
   price: number;
   overviewUrl: string;
+  instructor: string;
+  level: string;
+  duration: string;
 }
 
 export interface Department {
@@ -27,11 +30,11 @@ export const courseFee = 50000;
 
 export const departments: Department[] = [
   {
-    id: "3d-blender-film",
-    name: "3D Blender & Film Fundamentals",
-    tagline: "Master the art of 3D creation and cinematic storytelling",
+    id: "3d-vfx",
+    name: "3D & VFX",
+    tagline: "Master digital creation and cinematic storytelling",
     icon: "🎬",
-    backgroundImage: "https://images.unsplash.com/photo-1709165653909-53ede28812b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHwzRCUyMGRpZ2l0YWwlMjBhcnQlMjByZW5kZXIlMjBmdXR1cmlzdGljfGVufDF8fHx8MTc3NDc2OTQwMnww&ixlib=rb-4.1.0&q=80&w=1080",
+    backgroundImage: "https://images.unsplash.com/photo-1709165653909-53ede28812b2",
     gradient: "from-purple-600 via-blue-600 to-indigo-700",
     theme: {
       primary: "#8b5cf6",
@@ -40,34 +43,49 @@ export const departments: Department[] = [
     },
     courses: [
       {
-        id: "intro-3d-modeling",
-        name: "Introduction to 3D Modeling",
-        description: "Learn the fundamentals of 3D modeling with Blender. Create stunning 3D objects from scratch and understand the basics of mesh manipulation.",
+        id: "intro-blender",
+        name: "\"I AM CUBE\" Intro to Blender",
+        description:
+          "Learn Blender basics from interface navigation to rendering, with weekly feedback and a final cube animation project.",
         price: 50000,
-        overviewUrl: "#",
+        overviewUrl:
+          "https://oxrrvywnqzdfqtugnjyj.supabase.co/storage/v1/object/public/course_outlines/I_AM_CUBE_INTRO_TO_BLENDER.pdf",
+        instructor: "Rafiki Nigel Moyo",
+        level: "Beginner",
+        duration: "6 weeks",
       },
       {
-        id: "character-animation",
-        name: "Character Animation & Rigging",
-        description: "Bring your characters to life! Master rigging, weight painting, and animation techniques to create professional character animations.",
+        id: "cinematic-vfx",
+        name: "Cinematic Product Branding & Commercial VFX",
+        description:
+          "Industry-facing course on high-end product visualization, studio lighting, complex surfaces, and commercial workflows.",
         price: 50000,
-        overviewUrl: "#",
+        overviewUrl:
+          "https://oxrrvywnqzdfqtugnjyj.supabase.co/storage/v1/object/public/course_outlines/Cinematic%20Product%20Branding%20&%20Commercial%20VFX.pdf",
+        instructor: "Matthew Lusayo Chawinga",
+        level: "Intermediate - Advanced",
+        duration: "8 weeks",
       },
       {
-        id: "cinematic-rendering",
-        name: "Cinematic Rendering & Lighting",
-        description: "Discover the secrets of cinematic lighting and rendering. Learn to create photorealistic scenes with professional lighting techniques.",
+        id: "game-art-assets",
+        name: "Introduction to 3D Game Art Workflow & Asset Creation",
+        description:
+          "Translate concept art into game-ready 3D assets using stylized workflows, UV unwrapping, texturing, and Unity integration.",
         price: 50000,
-        overviewUrl: "#",
+        overviewUrl:
+          "https://oxrrvywnqzdfqtugnjyj.supabase.co/storage/v1/object/public/course_outlines/INTRODUCTION%20TO%203D%20GAME%20ART%20%20-%20PROPS,%20WEAPONS%20AND%20ENVIRONMENT%20ASSETS.pdf.pdf",
+        instructor: "Mwayiwawo Kamvantope",
+        level: "Beginner - Intermediate",
+        duration: "8 weeks",
       },
     ],
   },
   {
-    id: "dynamic-sketching",
-    name: "Dynamic Sketching",
-    tagline: "Transform your ideas into captivating visual stories",
+    id: "visual-development",
+    name: "Visual Development",
+    tagline: "Transform ideas into captivating visual stories",
     icon: "✏️",
-    backgroundImage: "https://images.unsplash.com/photo-1758521232708-d738b0eaa94a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpc3RpYyUyMHBlbmNpbCUyMHNrZXRjaCUyMGRyYXdpbmd8ZW58MXx8fHwxNzc0NzY5NDAyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    backgroundImage: "https://images.unsplash.com/photo-1758521232708-d738b0eaa94a",
     gradient: "from-orange-500 via-pink-500 to-rose-600",
     theme: {
       primary: "#f97316",
@@ -76,25 +94,40 @@ export const departments: Department[] = [
     },
     courses: [
       {
-        id: "gesture-drawing",
-        name: "Gesture Drawing & Figure Studies",
-        description: "Capture the essence of movement and form. Learn dynamic gesture drawing techniques to create expressive character poses.",
+        id: "dynamic-sketching",
+        name: "Introduction to Dynamic Sketching",
+        description:
+          "Observational drawing course to build foundational sketching skills, perspective, organic forms, and redesign projects.",
         price: 50000,
-        overviewUrl: "#",
+        overviewUrl:
+          "https://oxrrvywnqzdfqtugnjyj.supabase.co/storage/v1/object/public/course_outlines/CORE__INTRODUCTION_TO_DYNAMIC_SKETCHING.pdf",
+        instructor: "Tumpale Chawinga",
+        level: "Beginner",
+        duration: "8 weeks",
       },
       {
-        id: "concept-art",
-        name: "Concept Art & Visual Development",
-        description: "Transform ideas into compelling visual concepts. Master the art of creating concept art for games, films, and animation.",
+        id: "digital-portrait",
+        name: "Digital Portrait Painting",
+        description:
+          "Portrait drawing using the Reilly method, anatomy studies, value work, and final polished portraits.",
         price: 50000,
-        overviewUrl: "#",
+        overviewUrl:
+          "https://oxrrvywnqzdfqtugnjyj.supabase.co/storage/v1/object/public/course_outlines/DIGITAL%20PORTAIT%20DRAWING.pdf",
+        instructor: "Tumpale Chawinga",
+        level: "Beginner - Intermediate",
+        duration: "8 weeks",
       },
       {
-        id: "digital-illustration",
-        name: "Digital Illustration Mastery",
-        description: "Elevate your digital art skills. Learn professional illustration techniques, color theory, and composition for stunning artwork.",
+        id: "character-storytelling",
+        name: "Character Design & Visual Storytelling",
+        description:
+          "Character design and storytelling through composition, gesture, and sequential art, culminating in a final comic or illustration.",
         price: 50000,
-        overviewUrl: "#",
+        overviewUrl:
+          "https://oxrrvywnqzdfqtugnjyj.supabase.co/storage/v1/object/public/course_outlines/CHARACTER%20DESIGN%20&%20VISUAL%20STORYTELLING.pdf",
+        instructor: "Ovil Msampha",
+        level: "Beginner - Intermediate",
+        duration: "8 weeks",
       },
     ],
   },
@@ -103,7 +136,7 @@ export const departments: Department[] = [
     name: "Game Development",
     tagline: "Build immersive worlds and interactive experiences",
     icon: "🎮",
-    backgroundImage: "https://images.unsplash.com/photo-1700412747294-b1bb05b86be4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZW9uJTIwZ2FtaW5nJTIwY3liZXJwdW5rJTIwYWJzdHJhY3R8ZW58MXx8fHwxNzc0NzY5NDAzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    backgroundImage: "https://images.unsplash.com/photo-1700412747294-b1bb05b86be4",
     gradient: "from-cyan-500 via-teal-500 to-green-600",
     theme: {
       primary: "#06b6d4",
@@ -112,29 +145,45 @@ export const departments: Department[] = [
     },
     courses: [
       {
-        id: "game-design-fundamentals",
-        name: "Game Design Fundamentals",
-        description: "Learn the core principles of game design. Understand mechanics, player psychology, and how to create engaging gameplay experiences.",
+        id: "game-fundamentals",
+        name: "Game Development Fundamentals",
+        description:
+          "Introduction to core principles of game creation, player interaction, logic, and building a complete simple game.",
         price: 50000,
-        overviewUrl: "#",
+        overviewUrl:
+          "https://oxrrvywnqzdfqtugnjyj.supabase.co/storage/v1/object/public/course_outlines/CORE%20%20FOUNDATION%20GAME%20DEVELOPMENT%20COURSE%20OUTLINE.pdf",
+        instructor: "Nyasha Mpinda",
+        level: "Beginner",
+        duration: "8 weeks",
       },
       {
-        id: "unity-development",
-        name: "Unity Game Development",
-        description: "Build your first game with Unity! Master C# programming, physics, and game mechanics to create professional 2D and 3D games.",
+        id: "unity-foundations",
+        name: "Foundations of Game Development in Unity",
+        description:
+          "Project-based Unity course covering scripting, mechanics, collisions, UI, and building a playable mini game.",
         price: 50000,
-        overviewUrl: "#",
+        overviewUrl:
+          "https://oxrrvywnqzdfqtugnjyj.supabase.co/storage/v1/object/public/course_outlines/FOUNDATIONS%20OF%20GAME%20DEVELOPMENT%20IN%20UNITY.pdf",
+        instructor: "Sangwani Mkandawire",
+        level: "Beginner - Intermediate",
+        duration: "6 weeks",
       },
       {
-        id: "game-art-ui",
-        name: "Game Art & UI Design",
-        description: "Create stunning game visuals and interfaces. Learn pixel art, UI/UX design, and asset creation for games.",
+        id: "godot-intermediate",
+        name: "Intermediate Game Development with Godot",
+        description:
+          "Advanced Godot course focusing on complex systems, UI, AI, optimization, and producing a polished portfolio-ready game.",
         price: 50000,
-        overviewUrl: "#",
+        overviewUrl:
+          "https://oxrrvywnqzdfqtugnjyj.supabase.co/storage/v1/object/public/course_outlines/Intermediate_Game_Development_Godot_v2.pdf",
+        instructor: "Kevin Thindwa",
+        level: "Intermediate",
+        duration: "8 weeks",
       },
     ],
   },
 ];
+
 
 export function getDepartmentById(id: string): Department | undefined {
   return departments.find((dept) => dept.id === id);

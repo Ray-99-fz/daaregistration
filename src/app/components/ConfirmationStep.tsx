@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { CreditCard, Loader2 } from "lucide-react";
-import { courseFee, registrationFee } from "../data/departments";
+import { courseFee, getCourseById, registrationFee } from "../data/departments";
+import { CourseMeta } from "./CourseMeta";
 import type { RegistrationData } from "../types/registration";
 import type { RegistrationFormData } from "@/lib/registration/registration-form.types";
 import { getValidationErrors, validateForm } from "@/lib/registration/registration-validation";
@@ -20,6 +21,8 @@ export function ConfirmationStep({ data }: ConfirmationStepProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  const course = getCourseById(data.departmentId, data.courseId);
 
   const handlePay = async () => {
     if (isSubmitting || success) return;
@@ -53,12 +56,18 @@ export function ConfirmationStep({ data }: ConfirmationStepProps) {
 
       <div className="space-y-4">
         <div className="p-6 bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl">
-          <div className="flex justify-between items-start mb-4">
-            <div>
+          <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start mb-4">
+            <div className="min-w-0">
               <h3 className="text-xl font-bold text-white mb-1">Selected Course</h3>
-              <p className="text-slate-300">Registration fee (due upon registration)</p>
+              {course ? (
+                <>
+                  <p className="text-slate-200 font-medium mb-2">{course.name}</p>
+                  <CourseMeta course={course} />
+                </>
+              ) : null}
+              <p className="text-slate-300 mt-3">Registration fee (due upon registration)</p>
             </div>
-            <div className="text-right">
+            <div className="text-left sm:text-right shrink-0">
               <div className="text-3xl font-bold text-white">MWK {registrationFee.toLocaleString()}</div>
             </div>
           </div>

@@ -5,7 +5,9 @@ import {
   getDepartmentById,
   registrationFee,
 } from "../data/departments";
-import { ArrowLeft, ExternalLink, CheckCircle2 } from "lucide-react";
+import { CourseMeta } from "../components/CourseMeta";
+import { downloadFile } from "../../lib/downloadFile";
+import { ArrowLeft, Download, CheckCircle2 } from "lucide-react";
 
 export default function DepartmentCourses() {
   const { departmentId } = useParams<{ departmentId: string }>();
@@ -92,9 +94,11 @@ export default function DepartmentCourses() {
                   {course.name}
                 </h3>
 
-                <p className="text-slate-400 mb-6 leading-relaxed">
+                <p className="text-slate-400 mb-4 leading-relaxed">
                   {course.description}
                 </p>
+
+                <CourseMeta course={course} className="mb-6" />
 
                 {/* Price */}
                 <div className="mb-6">
@@ -140,13 +144,37 @@ export default function DepartmentCourses() {
                     Select Course
                   </motion.button>
 
-                  <a
-                    href={course.overviewUrl}
-                    className="w-full sm:w-auto whitespace-nowrap min-h-11 px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base md:text-lg border border-slate-700 text-slate-300 font-medium rounded-xl transition-all duration-300 flex items-center justify-center gap-2 hover:bg-slate-800 hover:text-white hover:shadow-lg active:scale-[0.99]"
+                  <span
+                    title={
+                      course.overviewUrl
+                        ? "Download course overview (PDF)"
+                        : "Course overview PDF is not available"
+                    }
+                    className="w-full sm:w-auto inline-block"
                   >
-                    <span>View Overview</span>
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
+                    <motion.button
+                      type="button"
+                      disabled={!course.overviewUrl}
+                      onClick={() =>
+                        downloadFile(course.overviewUrl, `${course.name}.pdf`)
+                      }
+                      className="w-full sm:w-auto whitespace-nowrap min-h-11 px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base md:text-lg border border-slate-700 text-slate-300 font-medium rounded-xl transition-all duration-300 flex items-center justify-center gap-2 hover:bg-slate-800 hover:text-white hover:shadow-lg active:scale-[0.99] disabled:opacity-45 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-slate-300 disabled:hover:shadow-none"
+                      whileHover={
+                        course.overviewUrl ? { scale: 1.02 } : undefined
+                      }
+                      whileTap={
+                        course.overviewUrl ? { scale: 0.98 } : undefined
+                      }
+                    >
+                      <Download className="w-4 h-4 shrink-0" aria-hidden />
+                      <span className="inline-flex items-center gap-1.5">
+                        Course Overview
+                        <span className="text-xs text-slate-400 font-normal">
+                          (PDF)
+                        </span>
+                      </span>
+                    </motion.button>
+                  </span>
                 </div>
               </div>
             </motion.div>

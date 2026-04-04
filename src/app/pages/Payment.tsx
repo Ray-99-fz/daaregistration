@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { useLocation, useNavigate } from "react-router";
 import { CheckCircle2, CreditCard, Loader2, Shield, Clock } from "lucide-react";
 import { courseFee, registrationFee, type Course, type Department } from "../data/departments";
+import { CourseMeta } from "../components/CourseMeta";
 import type { RegistrationData } from "../types/registration";
 import { registrationDataToInsert } from "@/lib/registration/transforms";
 import {
@@ -116,6 +117,9 @@ export default function Payment() {
                   <span className="text-slate-400">Department</span>
                   <span className="text-white font-medium">{department.name}</span>
                 </div>
+                <div className="pt-2 border-t border-slate-700/80">
+                  <CourseMeta course={course} />
+                </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Amount Paid</span>
                   <span className="text-green-400 font-bold">
@@ -217,10 +221,11 @@ export default function Payment() {
               
               <div className="space-y-4 mb-6">
                 <div className="flex items-start gap-3">
-                  <span className="text-3xl">{department.icon}</span>
-                  <div>
+                  <span className="text-3xl shrink-0">{department.icon}</span>
+                  <div className="min-w-0">
                     <h3 className="font-semibold text-white">{course.name}</h3>
-                    <p className="text-sm text-slate-400">{department.name}</p>
+                    <p className="text-sm text-slate-400 mb-3">{department.name}</p>
+                    <CourseMeta course={course} />
                   </div>
                 </div>
               </div>

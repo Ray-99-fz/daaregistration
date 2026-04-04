@@ -12,6 +12,7 @@ import {
   MarketingStep,
 } from "../components/RegistrationSteps";
 import { ConfirmationStep } from "../components/ConfirmationStep";
+import { CourseMeta } from "../components/CourseMeta";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useAutosaveForm } from "@/hooks/useAutosaveForm";
@@ -135,11 +136,12 @@ export default function Registration() {
             <span>Back</span>
           </button>
 
-          <div className="flex items-center gap-3 mb-6">
-            <span className="text-4xl">{department.icon}</span>
-            <div>
+          <div className="flex items-start gap-3 mb-6">
+            <span className="text-4xl shrink-0">{department.icon}</span>
+            <div className="min-w-0 flex-1">
               <h1 className="text-2xl sm:text-3xl font-bold text-white">{course.name}</h1>
-              <p className="text-slate-400">{department.name}</p>
+              <p className="text-slate-400 mb-3">{department.name}</p>
+              <CourseMeta course={course} />
             </div>
           </div>
         </motion.div>
