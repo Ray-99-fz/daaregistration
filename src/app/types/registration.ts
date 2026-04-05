@@ -2,11 +2,8 @@ import type { RegistrationFormData } from "@/lib/registration/registration-form.
 
 export type { RegistrationFormData };
 
-/** Full wizard state: form fields + route context (not sent to `registrations` in mapToDatabaseFormat). */
-export interface RegistrationData extends RegistrationFormData {
-  departmentId: string;
-  courseId: string;
-}
+/** Full wizard state (same fields as the payload validated and mapped for Supabase). */
+export type RegistrationData = RegistrationFormData;
 
 export const initialRegistrationData: RegistrationData = {
   firstName: "",

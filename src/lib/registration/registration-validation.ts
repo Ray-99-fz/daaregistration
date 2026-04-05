@@ -30,6 +30,14 @@ const REFERRALS = new Set([
 export function getValidationErrors(data: RegistrationFormData): string[] {
   const errors: string[] = [];
 
+  if (!data.departmentId?.trim()) {
+    errors.push("Please select a department.");
+  }
+
+  if (!data.courseId?.trim()) {
+    errors.push("Please select a course.");
+  }
+
   if (!data.firstName?.trim()) errors.push("First name is required.");
   if (!data.lastName?.trim()) errors.push("Last name is required.");
   if (!data.city?.trim()) errors.push("City is required.");

@@ -1,9 +1,10 @@
 /**
  * Frontend registration payload (camelCase).
- * Mirrors the `registrations` table conceptually; `departmentId` / `courseId` are
- * wizard-only and are not sent in `mapToDatabaseFormat`.
+ * Mirrors the `registrations` table conceptually; mapped to snake_case in `mapToDatabaseFormat`.
  */
 export type RegistrationFormData = {
+  departmentId: string;
+  courseId: string;
   firstName: string;
   lastName: string;
   ageRange: string;
@@ -34,6 +35,8 @@ export type RegistrationFormData = {
  * RLS: the anon role may only **INSERT** — never assume SELECT/UPDATE/DELETE work from the browser.
  */
 export type RegistrationDatabaseInsert = {
+  department_id: string;
+  course_id: string;
   first_name: string;
   last_name: string;
   age_range: "11-17" | "18-24" | "25-34" | "35+";

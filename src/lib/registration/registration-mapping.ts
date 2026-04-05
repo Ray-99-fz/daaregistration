@@ -88,6 +88,8 @@ export function mapToDatabaseFormat(data: RegistrationFormData): RegistrationDat
       : null;
 
   return {
+    department_id: data.departmentId,
+    course_id: data.courseId,
     first_name: data.firstName.trim(),
     last_name: data.lastName.trim(),
     age_range,

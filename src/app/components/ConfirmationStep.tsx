@@ -13,8 +13,7 @@ type ConfirmationStepProps = {
 };
 
 function toFormData(data: RegistrationData): RegistrationFormData {
-  const { departmentId: _d, courseId: _c, ...rest } = data;
-  return rest;
+  return data;
 }
 
 export function ConfirmationStep({ data }: ConfirmationStepProps) {
