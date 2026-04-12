@@ -98,7 +98,9 @@ export function ConfirmationStep({ data }: ConfirmationStepProps) {
               <div className="text-3xl font-bold text-white">MWK {registrationFee.toLocaleString()}</div>
             </div>
           </div>
-          <p className="text-sm text-slate-400">Course fee: MWK {courseFee.toLocaleString()} (due at course start)</p>
+          <p className="text-sm text-slate-400">
+            Course fee: MWK {courseFee.toLocaleString()} per month (payable when classes begin).
+          </p>
         </div>
 
         <div className="p-6 bg-slate-900/50 border border-slate-700 rounded-xl space-y-4">
@@ -122,9 +124,14 @@ export function ConfirmationStep({ data }: ConfirmationStepProps) {
           </div>
         </div>
 
-        <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+        <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl space-y-3">
           <p className="text-sm text-blue-200">
             By paying, you agree to our terms and conditions. Your registration will be saved securely.
+          </p>
+          <p className="text-sm text-slate-300 leading-relaxed">
+            After your registration is complete, we will contact you by email at{" "}
+            <span className="font-medium text-white">{data.email}</span> with any further details about your course
+            (schedule, materials, and next steps).
           </p>
         </div>
 

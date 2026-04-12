@@ -235,10 +235,11 @@ export default function Payment() {
               </div>
 
               <div className="border-t border-slate-700 pt-4 mb-6">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-slate-400">Course Fee (due at course start)</span>
-                  <span className="text-white">
+                <div className="flex justify-between items-center mb-2 gap-3">
+                  <span className="text-slate-400">Course fee (per month)</span>
+                  <span className="text-white text-right shrink-0">
                     MWK {courseFee.toLocaleString()}
+                    <span className="text-slate-500 font-normal"> / month</span>
                   </span>
                 </div>
                 <div className="flex justify-between items-center mb-2">

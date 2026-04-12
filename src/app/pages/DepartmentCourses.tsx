@@ -6,6 +6,7 @@ import {
   getDepartmentById,
   registrationFee,
 } from "../data/departments";
+import { getDepartmentGallerySlides } from "../data/department-gallery";
 import { CourseMeta } from "../components/CourseMeta";
 import { downloadFile } from "../../lib/downloadFile";
 import { ArrowLeft, Download, CheckCircle2 } from "lucide-react";
@@ -23,11 +24,12 @@ export default function DepartmentCourses() {
     );
   }
 
-  /** Carousel uses bundled assets only — each course contributes its thumbnail twice for a fuller strip. */
-  const gallerySlides = useMemo(
-    () => department.courses.flatMap((c) => [c.thumbnail, c.thumbnail]),
-    [department.courses],
-  );
+  /** Carousel: department folder images; falls back to course thumbnails if none configured. */
+  const gallerySlides = useMemo(() => {
+    const fromDept = getDepartmentGallerySlides(department.id);
+    if (fromDept.length > 0) return [...fromDept];
+    return department.courses.map((c) => c.thumbnail);
+  }, [department.id, department.courses]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 relative overflow-hidden">
@@ -143,8 +145,8 @@ export default function DepartmentCourses() {
                     <span className="text-slate-500 text-sm">registration fee (due now)</span>
                   </div>
                   <p className="text-slate-500 text-sm mt-1">
-                    <span className="text-white font-medium">MWK {courseFee.toLocaleString()}</span>
-                    <span className="text-slate-500"> course fee (due at course start)</span>
+                    <span className="text-white font-medium">MWK {courseFee.toLocaleString()} per month</span>
+                    <span className="text-slate-500"> course fee (payable when classes begin)</span>
                   </p>
                 </div>
 

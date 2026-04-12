@@ -8,7 +8,7 @@ import {
   registrationUsesConnectivityInsteadOfEquipment,
 } from "./registration-wizard-steps";
 
-/** MWK — must match product rules and DB `registration_fee` / `course_fee` */
+/** MWK — must match product rules and DB `registration_fee` / `course_fee` (course fee = monthly tuition). */
 export const REGISTRATION_FEE = 5000;
 export const COURSE_FEE = 50000;
 

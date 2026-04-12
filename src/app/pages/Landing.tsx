@@ -139,7 +139,7 @@ export default function Landing() {
         >
           <p className="text-slate-400 text-sm">
             Registration is MWK {registrationFee.toLocaleString()} (due upon registration) • Course fee is MWK{" "}
-            {courseFee.toLocaleString()} (due when the course starts) • Expert instructors • Hands-on projects
+            {courseFee.toLocaleString()} per month (payable when classes begin) • Expert instructors • Hands-on projects
           </p>
         </motion.div>
       </div>
