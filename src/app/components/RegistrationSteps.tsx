@@ -540,7 +540,7 @@ export function MarketingStep({ data, updateData }: StepProps) {
       <div>
         <label className="flex flex-wrap items-center gap-2 text-sm font-medium text-slate-300 mb-3">
           <span>How did you hear about</span>
-          <BrandLogo className="h-6 w-auto shrink-0" />
+          <BrandLogo className="max-h-6 w-auto max-w-[140px] sm:max-w-[180px] object-contain shrink-0" />
           <span className="text-red-400">*</span>
         </label>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

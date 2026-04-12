@@ -104,7 +104,7 @@ export default function Payment() {
               Registration Complete!
             </h1>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-              <BrandLogo className="h-12 w-auto shrink-0" />
+              <BrandLogo className="max-h-12 w-auto max-w-[min(100%,280px)] object-contain shrink-0" />
               <p className="text-xl text-slate-300 text-center sm:text-left">
                 Welcome, {formData.firstName}!
               </p>

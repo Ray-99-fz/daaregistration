@@ -23,9 +23,9 @@ export default function DepartmentCourses() {
     );
   }
 
+  /** Carousel uses bundled assets only — each course contributes its thumbnail twice for a fuller strip. */
   const gallerySlides = useMemo(
-    () =>
-      department.courses.flatMap((c) => [c.image, ...(c.trialImages ?? [])]),
+    () => department.courses.flatMap((c) => [c.thumbnail, c.thumbnail]),
     [department.courses],
   );
 
@@ -90,7 +90,9 @@ export default function DepartmentCourses() {
                 key={`${src}-${i}`}
                 src={src}
                 alt=""
-                className="h-28 w-44 sm:h-32 sm:w-52 shrink-0 rounded-xl object-cover snap-start border border-slate-800 shadow-md"
+                loading="lazy"
+                decoding="async"
+                className="h-28 w-44 sm:h-32 sm:w-52 shrink-0 rounded-xl object-cover snap-start border border-slate-800 shadow-md bg-slate-900"
               />
             ))}
           </div>
@@ -117,9 +119,9 @@ export default function DepartmentCourses() {
                 </div>
 
                 <img
-                  src={course.image}
+                  src={course.thumbnail}
                   alt={course.name}
-                  className="w-full h-44 rounded-xl object-cover mb-4 border border-slate-800"
+                  className="w-full h-48 rounded-xl object-cover mb-4 border border-slate-800"
                 />
 
                 <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-slate-300 group-hover:bg-clip-text transition-all">

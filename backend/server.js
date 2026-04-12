@@ -7,7 +7,11 @@ const webhookRoute = require("./routes/webhook");
 
 const app = express();
 
-const frontendOrigins = ["http://localhost:5173", process.env.FRONTEND_URL].filter(Boolean);
+const frontendOrigins = [
+    "http://localhost:5173",   // default Vite port
+    "http://localhost:5174",   // your actual dev port
+    process.env.FRONTEND_URL   // production frontend domain
+  ].filter(Boolean);
 
 app.use(
   cors({

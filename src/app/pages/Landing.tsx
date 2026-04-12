@@ -8,14 +8,14 @@ export default function Landing() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 relative overflow-hidden">
-      {/* Animated background elements */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-[#1a080c] to-slate-950 relative overflow-hidden">
+      {/* Animated background — tuned to logo red (#E31E24) while keeping a dark cinematic base */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          className="absolute top-20 left-10 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl"
+          className="absolute top-20 left-10 w-72 h-72 rounded-full blur-3xl bg-[#E31E24]/18"
           animate={{
             scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
+            opacity: [0.35, 0.55, 0.35],
           }}
           transition={{
             duration: 8,
@@ -24,10 +24,10 @@ export default function Landing() {
           }}
         />
         <motion.div
-          className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"
+          className="absolute bottom-20 right-10 w-96 h-96 rounded-full blur-3xl bg-rose-900/25"
           animate={{
             scale: [1.2, 1, 1.2],
-            opacity: [0.4, 0.2, 0.4],
+            opacity: [0.35, 0.2, 0.35],
           }}
           transition={{
             duration: 10,
@@ -35,6 +35,7 @@ export default function Landing() {
             ease: "easeInOut",
           }}
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-950/40 to-slate-950/90 pointer-events-none" />
       </div>
 
       {/* Content */}
@@ -47,19 +48,19 @@ export default function Landing() {
           transition={{ duration: 0.6 }}
         >
           <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full mb-6"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#E31E24]/12 border border-[#E31E24]/25 rounded-full mb-6"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <Sparkles className="w-4 h-4 text-purple-400" />
-            <span className="text-sm text-purple-300">
+            <Sparkles className="w-4 h-4 text-[#E31E24]" />
+            <span className="text-sm text-red-100/90">
               Registrations open for classes starting 2 May
             </span>
           </motion.div>
           
-          <div className="flex justify-center mb-6">
-            <BrandLogo className="h-14 sm:h-20 w-auto max-w-[min(100%,420px)]" />
+          <div className="flex justify-center mb-6 px-2">
+            <BrandLogo className="w-full max-w-[min(100%,32rem)] h-auto max-h-24 sm:max-h-32 md:max-h-36 object-contain mx-auto" />
           </div>
           <p className="text-xl sm:text-2xl text-slate-300 max-w-3xl mx-auto">
             Transform your creative passion into professional expertise.

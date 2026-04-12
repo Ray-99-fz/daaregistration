@@ -1,4 +1,4 @@
-import { Instagram, Twitter, Globe } from "lucide-react";
+import { Instagram, Globe } from "lucide-react";
 import type { Course } from "../data/departments";
 
 type CourseMetaProps = {
@@ -6,10 +6,8 @@ type CourseMetaProps = {
   className?: string;
 };
 
-/** Instructor, level, duration, and optional social links. */
+/** Instructor, level, duration, and optional instructor social link. */
 export function CourseMeta({ course, className = "" }: CourseMetaProps) {
-  const socials = course.instructorSocials;
-
   return (
     <div className={`text-sm text-slate-400 space-y-2 sm:space-y-0 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-1 ${className}`}>
       <p>
@@ -21,44 +19,26 @@ export function CourseMeta({ course, className = "" }: CourseMetaProps) {
       <p>
         <span className="text-slate-500">Duration:</span> {course.duration}
       </p>
-      {socials && (socials.instagram || socials.twitter || socials.portfolio) ? (
-        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto pt-1 sm:pt-0">
-          <span className="text-slate-500 shrink-0">Links:</span>
-          <div className="flex items-center gap-2">
-            {socials.instagram ? (
-              <a
-                href={socials.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-pink-400 hover:text-pink-300 transition-colors"
-                aria-label="Instructor on Instagram"
-              >
-                <Instagram className="w-5 h-5" />
-              </a>
-            ) : null}
-            {socials.twitter ? (
-              <a
-                href={socials.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sky-400 hover:text-sky-300 transition-colors"
-                aria-label="Instructor on X (Twitter)"
-              >
-                <Twitter className="w-5 h-5" />
-              </a>
-            ) : null}
-            {socials.portfolio ? (
-              <a
-                href={socials.portfolio}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-emerald-400 hover:text-emerald-300 transition-colors"
-                aria-label="Instructor portfolio"
-              >
-                <Globe className="w-5 h-5" />
-              </a>
-            ) : null}
-          </div>
+      {course.instructorSocial ? (
+        <div className="w-full sm:w-auto pt-1 sm:pt-0">
+          <a
+            href={course.instructorSocial.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300"
+            aria-label={
+              course.instructorSocial.type === "instagram"
+                ? "Instructor on Instagram"
+                : "Instructor portfolio"
+            }
+          >
+            {course.instructorSocial.type === "instagram" ? (
+              <Instagram className="w-4 h-4 shrink-0" aria-hidden />
+            ) : (
+              <Globe className="w-4 h-4 shrink-0" aria-hidden />
+            )}
+            <span>Instructor</span>
+          </a>
         </div>
       ) : null}
     </div>

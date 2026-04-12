@@ -1,3 +1,18 @@
+import introBlenderImg from "@/assets/images/I AM CUBE Intro to Blender.jpg";
+import cinematicVfxImg from "@/assets/images/Cinematic Product Branding & Commercial VFX.jpg";
+import gameArtAssetsImg from "@/assets/images/Introduction to 3D Game Art Workflow & Asset Creation.png";
+import dynamicSketchingImg from "@/assets/images/Introduction to Dynamic Sketching.jpg";
+import digitalPortraitImg from "@/assets/images/Digital Portrait Painting.jpg";
+import characterStorytellingImg from "@/assets/images/Character Design & Visual Storytelling.png";
+import gameFundamentalsImg from "@/assets/images/Game Development Fundamentals.png";
+import unityFoundationsImg from "@/assets/images/Foundations of Game Development in Unity.jpg";
+import godotIntermediateImg from "@/assets/images/Intermediate Game Development with Godot.png";
+
+export type InstructorSocialLink = {
+  type: "instagram" | "portfolio";
+  url: string;
+};
+
 export interface Course {
   id: string;
   name: string;
@@ -7,14 +22,13 @@ export interface Course {
   instructor: string;
   level: string;
   duration: string;
+  /** Same bundled asset as `thumbnail` (kept for any legacy `course.image` usage). */
   image: string;
-  /** Extra shots for gallery / horizontal scroll */
+  /** Primary card / gallery image (bundled asset). */
+  thumbnail: string;
+  /** Extra gallery shots; optional when empty. */
   trialImages?: string[];
-  instructorSocials?: {
-    instagram?: string;
-    twitter?: string;
-    portfolio?: string;
-  };
+  instructorSocial?: InstructorSocialLink;
 }
 
 export interface Department {
@@ -61,12 +75,12 @@ export const departments: Department[] = [
         instructor: "Rafiki Nigel Moyo",
         level: "Beginner",
         duration: "6 weeks",
-        image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
-        trialImages: [
-          "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=800&q=80",
-          "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80",
-        ],
-        instructorSocials: { instagram: "https://instagram.com", portfolio: "https://www.behance.net" },
+        thumbnail: introBlenderImg,
+        image: introBlenderImg,
+        instructorSocial: {
+          type: "instagram",
+          url: "https://instagram.com/nigel_xeno",
+        },
       },
       {
         id: "cinematic-vfx",
@@ -79,12 +93,12 @@ export const departments: Department[] = [
         instructor: "Matthew Lusayo Chawinga",
         level: "Intermediate - Advanced",
         duration: "8 weeks",
-        image: "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&w=800&q=80",
-        trialImages: [
-          "https://images.unsplash.com/photo-1626785774573-4b799314346d?auto=format&fit=crop&w=800&q=80",
-          "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=800&q=80",
-        ],
-        instructorSocials: { portfolio: "https://www.behance.net" },
+        thumbnail: cinematicVfxImg,
+        image: cinematicVfxImg,
+        instructorSocial: {
+          type: "instagram",
+          url: "https://instagram.com/matt_the.creator",
+        },
       },
       {
         id: "game-art-assets",
@@ -97,11 +111,12 @@ export const departments: Department[] = [
         instructor: "Mwayiwawo Kamvantope",
         level: "Beginner - Intermediate",
         duration: "8 weeks",
-        image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80",
-        trialImages: [
-          "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80",
-          "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=800&q=80",
-        ],
+        thumbnail: gameArtAssetsImg,
+        image: gameArtAssetsImg,
+        instructorSocial: {
+          type: "instagram",
+          url: "https://instagram.com/dreamradgames",
+        },
       },
     ],
   },
@@ -129,12 +144,12 @@ export const departments: Department[] = [
         instructor: "Tumpale Chawinga",
         level: "Beginner",
         duration: "8 weeks",
-        image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=800&q=80",
-        trialImages: [
-          "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&w=800&q=80",
-          "https://images.unsplash.com/photo-1513475382583-d0067c604b29?auto=format&fit=crop&w=800&q=80",
-        ],
-        instructorSocials: { instagram: "https://instagram.com" },
+        thumbnail: dynamicSketchingImg,
+        image: dynamicSketchingImg,
+        instructorSocial: {
+          type: "instagram",
+          url: "https://instagram.com/tumpale.sketches",
+        },
       },
       {
         id: "digital-portrait",
@@ -147,12 +162,12 @@ export const departments: Department[] = [
         instructor: "Tumpale Chawinga",
         level: "Beginner - Intermediate",
         duration: "8 weeks",
-        image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=800&q=80",
-        trialImages: [
-          "https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?auto=format&fit=crop&w=800&q=80",
-          "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=800&q=80",
-        ],
-        instructorSocials: { instagram: "https://instagram.com", portfolio: "https://www.behance.net" },
+        thumbnail: digitalPortraitImg,
+        image: digitalPortraitImg,
+        instructorSocial: {
+          type: "instagram",
+          url: "https://instagram.com/tumpale.sketches",
+        },
       },
       {
         id: "character-storytelling",
@@ -165,12 +180,8 @@ export const departments: Department[] = [
         instructor: "Ovil Msampha",
         level: "Beginner - Intermediate",
         duration: "8 weeks",
-        image: "https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80",
-        trialImages: [
-          "https://images.unsplash.com/photo-1515405295579-ba7b45403062?auto=format&fit=crop&w=800&q=80",
-          "https://images.unsplash.com/photo-1513475382583-d0067c604b29?auto=format&fit=crop&w=800&q=80",
-        ],
-        instructorSocials: { twitter: "https://twitter.com", portfolio: "https://www.behance.net" },
+        thumbnail: characterStorytellingImg,
+        image: characterStorytellingImg,
       },
     ],
   },
@@ -198,11 +209,12 @@ export const departments: Department[] = [
         instructor: "Nyasha Mpinda",
         level: "Beginner",
         duration: "8 weeks",
-        image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=800&q=80",
-        trialImages: [
-          "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=800&q=80",
-          "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80",
-        ],
+        thumbnail: gameFundamentalsImg,
+        image: gameFundamentalsImg,
+        instructorSocial: {
+          type: "portfolio",
+          url: "https://nyashampinda300.github.io/WebPortfolio/",
+        },
       },
       {
         id: "unity-foundations",
@@ -215,12 +227,8 @@ export const departments: Department[] = [
         instructor: "Sangwani Mkandawire",
         level: "Beginner - Intermediate",
         duration: "6 weeks",
-        image: "https://images.unsplash.com/photo-1556438064-2d7646166914?auto=format&fit=crop&w=800&q=80",
-        trialImages: [
-          "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=800&q=80",
-          "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80",
-        ],
-        instructorSocials: { portfolio: "https://github.com" },
+        thumbnail: unityFoundationsImg,
+        image: unityFoundationsImg,
       },
       {
         id: "godot-intermediate",
@@ -233,17 +241,12 @@ export const departments: Department[] = [
         instructor: "Kevin Thindwa",
         level: "Intermediate",
         duration: "8 weeks",
-        image: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80",
-        trialImages: [
-          "https://images.unsplash.com/photo-1556438064-2d7646166914?auto=format&fit=crop&w=800&q=80",
-          "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80",
-        ],
-        instructorSocials: { twitter: "https://twitter.com" },
+        thumbnail: godotIntermediateImg,
+        image: godotIntermediateImg,
       },
     ],
   },
 ];
-
 
 export function getDepartmentById(id: string): Department | undefined {
   return departments.find((dept) => dept.id === id);
