@@ -223,7 +223,7 @@ export const departments: Department[] = [
           "Project-based Unity course covering scripting, mechanics, collisions, UI, and building a playable mini game.",
         price: 50000,
         overviewUrl:
-          "https://oxrrvywnqzdfqtugnjyj.supabase.co/storage/v1/object/public/course_outlines/FOUNDATIONS%20OF%20GAME%20DEVELOPMENT%20IN%20UNITY.pdf",
+          "https://oxrrvywnqzdfqtugnjyj.supabase.co/storage/v1/object/public/course_outlines/FOGDIU%20-%20Sangwani%20Mkandawire.pdf.pdf.pdf",
         instructor: "Sangwani Mkandawire",
         level: "Beginner - Intermediate",
         duration: "6 weeks",
