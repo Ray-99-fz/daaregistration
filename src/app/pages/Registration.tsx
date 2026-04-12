@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useNavigate, useParams } from "react-router";
 import { getDepartmentById, getCourseById } from "../data/departments";
@@ -8,7 +8,7 @@ import {
   CurrentStatusStep,
   ExperienceStep,
   EquipmentStep,
-  AvailabilityStep,
+  ConnectivityStep,
   MarketingStep,
 } from "../components/RegistrationSteps";
 import { ConfirmationStep } from "../components/ConfirmationStep";
@@ -16,11 +16,19 @@ import { CourseMeta } from "../components/CourseMeta";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useAutosaveForm } from "@/hooks/useAutosaveForm";
+import {
+  getActiveRegistrationSteps,
+  type RegistrationStepId,
+} from "@/lib/registration/registration-wizard-steps";
 
 export default function Registration() {
   const { departmentId, courseId } = useParams<{ departmentId: string; courseId: string }>();
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(1);
+  const [stepIndex, setStepIndex] = useState(0);
+  const [paymentReturnNotice, setPaymentReturnNotice] = useState<
+    { tone: "success" | "error"; text: string } | null
+  >(null);
+
   const formMethods = useForm<RegistrationData>({
     defaultValues: {
       ...initialRegistrationData,
@@ -32,6 +40,11 @@ export default function Registration() {
   useAutosaveForm(formMethods);
   const formData = watch();
 
+  const activeSteps = useMemo(
+    () => getActiveRegistrationSteps(formData),
+    [formData.departmentId, formData.courseId],
+  );
+
   useEffect(() => {
     if (departmentId) {
       setValue("departmentId", departmentId, { shouldDirty: true });
@@ -41,52 +54,84 @@ export default function Registration() {
     }
   }, [courseId, departmentId, setValue]);
 
+  useEffect(() => {
+    setStepIndex((i) => Math.min(i, Math.max(0, activeSteps.length - 1)));
+  }, [activeSteps.length]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const status = params.get("status");
+    if (status === "success") {
+      setPaymentReturnNotice({
+        tone: "success",
+        text: "Payment successful! Your registration fee is confirmed.",
+      });
+    } else if (status === "failed") {
+      setPaymentReturnNotice({
+        tone: "error",
+        text: "Payment was not completed. You can try again using Pay Changu below.",
+      });
+    } else {
+      return;
+    }
+    params.delete("status");
+    const qs = params.toString();
+    const path = window.location.pathname;
+    window.history.replaceState({}, "", qs ? `${path}?${qs}` : path);
+  }, []);
+
   const department = getDepartmentById(departmentId || "");
   const course = getCourseById(departmentId || "", courseId || "");
 
-  const totalSteps = 7;
+  const totalSteps = activeSteps.length;
+  const currentStepId: RegistrationStepId | undefined = activeSteps[stepIndex];
 
-  const updateData = (updates: Partial<RegistrationData>) => {
-    for (const [key, value] of Object.entries(updates) as [keyof RegistrationData, RegistrationData[keyof RegistrationData]][]) {
-      setValue(key, value, { shouldDirty: true, shouldTouch: true });
-    }
-  };
+  const updateData = useCallback(
+    (updates: Partial<RegistrationData>) => {
+      for (const [key, value] of Object.entries(updates) as [
+        keyof RegistrationData,
+        RegistrationData[keyof RegistrationData],
+      ][]) {
+        setValue(key, value, { shouldDirty: true, shouldTouch: true });
+      }
+    },
+    [setValue],
+  );
 
   const nextStep = () => {
-    if (currentStep < totalSteps) {
-      setCurrentStep(currentStep + 1);
+    if (stepIndex < totalSteps - 1) {
+      setStepIndex(stepIndex + 1);
     }
   };
 
   const handlePrimaryAction = () => {
-    if (currentStep < totalSteps) {
+    if (stepIndex < totalSteps - 1) {
       nextStep();
     }
   };
 
   const prevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
+    if (stepIndex > 0) {
+      setStepIndex(stepIndex - 1);
     }
   };
 
   const renderStep = () => {
     const stepProps = { data: formData, updateData };
-    
-    switch (currentStep) {
-      case 1:
+    switch (currentStepId) {
+      case "personal":
         return <PersonalInfoStep {...stepProps} />;
-      case 2:
+      case "status":
         return <CurrentStatusStep {...stepProps} />;
-      case 3:
+      case "experience":
         return <ExperienceStep {...stepProps} />;
-      case 4:
+      case "equipment":
         return <EquipmentStep {...stepProps} />;
-      case 5:
-        return <AvailabilityStep {...stepProps} />;
-      case 6:
+      case "connectivity":
+        return <ConnectivityStep {...stepProps} />;
+      case "marketing":
         return <MarketingStep {...stepProps} />;
-      case 7:
+      case "confirmation":
         return <ConfirmationStep {...stepProps} />;
       default:
         return <PersonalInfoStep {...stepProps} />;
@@ -101,11 +146,11 @@ export default function Registration() {
     );
   }
 
-  const progress = (currentStep / totalSteps) * 100;
+  const displayStepNumber = stepIndex + 1;
+  const progress = totalSteps > 0 ? (displayStepNumber / totalSteps) * 100 : 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 relative overflow-hidden">
-      {/* Animated background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className={`absolute top-40 right-40 w-96 h-96 bg-gradient-to-br ${department.gradient} opacity-10 rounded-full blur-3xl`}
@@ -122,7 +167,18 @@ export default function Registration() {
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
+        {paymentReturnNotice ? (
+          <div
+            className={`mb-6 rounded-xl border px-4 py-3 text-sm ${
+              paymentReturnNotice.tone === "success"
+                ? "border-emerald-500/40 bg-emerald-950/40 text-emerald-100"
+                : "border-red-500/40 bg-red-950/40 text-red-100"
+            }`}
+            role="status"
+          >
+            {paymentReturnNotice.text}
+          </div>
+        ) : null}
         <motion.div
           className="mb-8"
           initial={{ opacity: 0, y: -20 }}
@@ -146,11 +202,10 @@ export default function Registration() {
           </div>
         </motion.div>
 
-        {/* Progress Bar */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-3">
             <span className="text-sm font-medium text-slate-300">
-              Step {currentStep} of {totalSteps}
+              Step {displayStepNumber} of {totalSteps}
             </span>
             <span className="text-sm font-medium text-slate-300">{Math.round(progress)}%</span>
           </div>
@@ -163,26 +218,24 @@ export default function Registration() {
             />
           </div>
 
-          {/* Step indicators */}
-          <div className="flex justify-between mt-4">
-            {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
+          <div className="flex justify-between mt-4 gap-1">
+            {activeSteps.map((_, i) => (
               <div
-                key={step}
-                className={`flex items-center justify-center w-8 h-8 rounded-full text-xs font-bold transition-all ${
-                  step < currentStep
+                key={`step-dot-${i}`}
+                className={`flex items-center justify-center min-w-8 h-8 rounded-full text-xs font-bold transition-all ${
+                  i < stepIndex
                     ? `bg-gradient-to-br ${department.gradient} text-white`
-                    : step === currentStep
-                    ? "bg-white text-slate-900"
-                    : "bg-slate-800 text-slate-500"
+                    : i === stepIndex
+                      ? "bg-white text-slate-900"
+                      : "bg-slate-800 text-slate-500"
                 }`}
               >
-                {step < currentStep ? <Check className="w-4 h-4" /> : step}
+                {i < stepIndex ? <Check className="w-4 h-4" /> : i + 1}
               </div>
             ))}
           </div>
         </div>
 
-        {/* Form Content */}
         <motion.div
           className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-2xl p-8 mb-8"
           initial={{ opacity: 0, y: 20 }}
@@ -190,7 +243,7 @@ export default function Registration() {
         >
           <AnimatePresence mode="wait">
             <motion.div
-              key={currentStep}
+              key={`${currentStepId}-${stepIndex}`}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
@@ -201,24 +254,23 @@ export default function Registration() {
           </AnimatePresence>
         </motion.div>
 
-        {/* Navigation Buttons */}
         <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
           <motion.button
             onClick={prevStep}
-            disabled={currentStep === 1}
+            disabled={stepIndex === 0}
             className={`w-full sm:w-auto whitespace-nowrap min-h-11 px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base md:text-lg rounded-xl font-semibold flex items-center justify-center gap-2 transition-all active:scale-[0.99] ${
-              currentStep === 1
+              stepIndex === 0
                 ? "bg-slate-800 text-slate-600 cursor-not-allowed"
                 : "bg-slate-800 text-white hover:bg-slate-700 hover:shadow-lg"
             }`}
-            whileHover={currentStep !== 1 ? { scale: 1.02 } : {}}
-            whileTap={currentStep !== 1 ? { scale: 0.98 } : {}}
+            whileHover={stepIndex !== 0 ? { scale: 1.02 } : {}}
+            whileTap={stepIndex !== 0 ? { scale: 0.98 } : {}}
           >
             <ArrowLeft className="w-5 h-5" />
             <span>Previous</span>
           </motion.button>
 
-          {currentStep < totalSteps ? (
+          {stepIndex < totalSteps - 1 ? (
             <motion.button
               type="button"
               onClick={handlePrimaryAction}
@@ -226,16 +278,12 @@ export default function Registration() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <>
-                <span className="sm:hidden">Next</span>
-                <span className="hidden sm:inline">Next</span>
-                <ArrowRight className="w-5 h-5 shrink-0" />
-              </>
+              <span>Next</span>
+              <ArrowRight className="w-5 h-5 shrink-0" />
             </motion.button>
           ) : null}
         </div>
 
-        {/* Help Text */}
         <motion.p
           className="text-center text-slate-500 text-sm mt-6"
           initial={{ opacity: 0 }}

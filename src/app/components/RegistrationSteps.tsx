@@ -1,5 +1,6 @@
 import { RegistrationData } from "../types/registration";
 import type { RegistrationFormData } from "@/lib/registration/registration-form.types";
+import { BrandLogo } from "./BrandLogo";
 
 interface StepProps {
   data: RegistrationData;
@@ -191,7 +192,7 @@ export function CurrentStatusStep({ data, updateData }: StepProps) {
             Education Level <span className="text-red-400">*</span>
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {["Secondary School", "College", "University", "Postgraduate"].map((level) => (
+            {["Primary", "Secondary", "Tertiary Undergrad", "Tertiary Postgrad"].map((level) => (
               <label
                 key={level}
                 className={`flex items-center justify-center px-4 py-3 border-2 rounded-xl cursor-pointer transition-all ${
@@ -414,51 +415,72 @@ export function EquipmentStep({ data, updateData }: StepProps) {
           ))}
         </div>
       </div>
-    </div>
-  );
-}
-
-// Step 5: Availability & Internet
-export function AvailabilityStep({ data, updateData }: StepProps) {
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-
-  const toggleDay = (day: string) => {
-    const current = data.availableDays || [];
-    if (current.includes(day)) {
-      updateData({ availableDays: current.filter((d) => d !== day) });
-    } else {
-      updateData({ availableDays: [...current, day] });
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold text-white mb-2">Availability & Internet</h2>
-        <p className="text-slate-400">When can you attend classes?</p>
-      </div>
 
       <div>
         <label className="block text-sm font-medium text-slate-300 mb-3">
-          Which days are you available? <span className="text-red-400">*</span>
+          Do you have reliable internet access? <span className="text-red-400">*</span>
         </label>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {days.map((day) => (
+        <div className="grid grid-cols-2 gap-3">
+          {["Yes", "No"].map((option) => (
             <label
-              key={day}
+              key={option}
               className={`flex items-center justify-center px-4 py-3 border-2 rounded-xl cursor-pointer transition-all ${
-                data.availableDays?.includes(day)
+                data.hasInternet === option
                   ? "border-purple-500 bg-purple-500/10 text-white"
                   : "border-slate-700 bg-slate-900/50 text-slate-400 hover:border-slate-600"
               }`}
             >
               <input
-                type="checkbox"
-                checked={data.availableDays?.includes(day)}
-                onChange={() => toggleDay(day)}
+                type="radio"
+                name="hasInternet"
+                value={option}
+                checked={data.hasInternet === option}
+                onChange={(e) =>
+                  updateData({ hasInternet: e.target.value as RegistrationFormData["hasInternet"] })
+                }
                 className="sr-only"
               />
-              <span className="text-sm font-medium">{day}</span>
+              <span className="text-sm font-medium">{option}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Shown when the full Equipment step is skipped (e.g. dynamic sketching). Device + internet only. */
+export function ConnectivityStep({ data, updateData }: StepProps) {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-3xl font-bold text-white mb-2">Device and connectivity</h2>
+        <p className="text-slate-400">Tell us how you will join sessions</p>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-slate-300 mb-3">
+          What device will you use for the course? <span className="text-red-400">*</span>
+        </label>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {["Desktop", "Laptop", "Tablet"].map((device) => (
+            <label
+              key={device}
+              className={`flex items-center justify-center px-4 py-3 border-2 rounded-xl cursor-pointer transition-all ${
+                data.deviceUsed === device
+                  ? "border-purple-500 bg-purple-500/10 text-white"
+                  : "border-slate-700 bg-slate-900/50 text-slate-400 hover:border-slate-600"
+              }`}
+            >
+              <input
+                type="radio"
+                name="deviceUsedConnectivity"
+                value={device}
+                checked={data.deviceUsed === device}
+                onChange={(e) => updateData({ deviceUsed: e.target.value })}
+                className="sr-only"
+              />
+              <span className="text-sm font-medium">{device}</span>
             </label>
           ))}
         </div>
@@ -480,7 +502,7 @@ export function AvailabilityStep({ data, updateData }: StepProps) {
             >
               <input
                 type="radio"
-                name="hasInternet"
+                name="hasInternetConnectivity"
                 value={option}
                 checked={data.hasInternet === option}
                 onChange={(e) =>
@@ -516,8 +538,10 @@ export function MarketingStep({ data, updateData }: StepProps) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-300 mb-3">
-          How did you hear about Digital Art Academy? <span className="text-red-400">*</span>
+        <label className="flex flex-wrap items-center gap-2 text-sm font-medium text-slate-300 mb-3">
+          <span>How did you hear about</span>
+          <BrandLogo className="h-6 w-auto shrink-0" />
+          <span className="text-red-400">*</span>
         </label>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {sources.map((source) => (
@@ -556,7 +580,7 @@ export function MarketingStep({ data, updateData }: StepProps) {
               Keep me updated
             </span>
             <p className="text-sm text-slate-400 mt-1">
-              I'd like to receive updates about new courses, workshops, and special offers from Digital Art Academy.
+              {"I'd like to receive updates about new courses, workshops, and special offers from the academy."}
             </p>
           </div>
         </label>

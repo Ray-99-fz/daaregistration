@@ -6,7 +6,7 @@ import { CourseMeta } from "./CourseMeta";
 import type { RegistrationData } from "../types/registration";
 import type { RegistrationFormData } from "@/lib/registration/registration-form.types";
 import { getValidationErrors, validateForm } from "@/lib/registration/registration-validation";
-import { submitRegistration } from "@/lib/registration/submit-registration";
+import { mapToDatabaseFormat } from "@/lib/registration/registration-mapping";
 
 type ConfirmationStepProps = {
   data: RegistrationData;
@@ -16,17 +16,19 @@ function toFormData(data: RegistrationData): RegistrationFormData {
   return data;
 }
 
+const paymentApiBase = import.meta.env.VITE_PAYMENT_API_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
+
 export function ConfirmationStep({ data }: ConfirmationStepProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   const course = getCourseById(data.departmentId, data.courseId);
 
   const handlePay = async () => {
-    if (isSubmitting || success) return;
+    if (isSubmitting) return;
 
     setError(null);
+
     const form = toFormData(data);
     if (!validateForm(form)) {
       setError(getValidationErrors(form).join("\n"));
@@ -34,13 +36,39 @@ export function ConfirmationStep({ data }: ConfirmationStepProps) {
     }
 
     setIsSubmitting(true);
+
     try {
-      const result = await submitRegistration(form);
-      if (result.ok) {
-        setSuccess(true);
-      } else {
-        setError(result.message);
+      let payload;
+      try {
+        payload = mapToDatabaseFormat(form);
+      } catch (e) {
+        const message = e instanceof Error ? e.message : "Invalid registration data.";
+        setError(message);
+        return;
       }
+
+      const res = await fetch(`${paymentApiBase}/create-payment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = (await res.json()) as { paymentUrl?: string; error?: string };
+
+      if (!res.ok) {
+        throw new Error(result.error || "Payment init failed");
+      }
+
+      if (!result.paymentUrl) {
+        throw new Error("Payment init failed");
+      }
+
+      window.location.href = result.paymentUrl;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to initiate payment.";
+      setError(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -109,23 +137,14 @@ export function ConfirmationStep({ data }: ConfirmationStepProps) {
           </div>
         )}
 
-        {success && (
-          <div
-            className="rounded-xl border border-emerald-500/40 bg-emerald-950/40 px-4 py-3 text-sm text-emerald-100"
-            role="status"
-          >
-            Registration submitted successfully. Thank you — we will contact you at {data.email}.
-          </div>
-        )}
-
         <motion.button
           type="button"
           onClick={handlePay}
-          disabled={isSubmitting || success}
+          disabled={isSubmitting}
           aria-busy={isSubmitting}
           className="w-full sm:w-auto whitespace-nowrap min-h-12 px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base md:text-lg font-bold rounded-xl transition-all flex items-center justify-center gap-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:shadow-2xl active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
-          whileHover={isSubmitting || success ? {} : { scale: 1.02 }}
-          whileTap={isSubmitting || success ? {} : { scale: 0.98 }}
+          whileHover={isSubmitting ? {} : { scale: 1.02 }}
+          whileTap={isSubmitting ? {} : { scale: 0.98 }}
         >
           {isSubmitting ? (
             <>

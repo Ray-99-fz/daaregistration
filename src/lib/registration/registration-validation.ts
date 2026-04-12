@@ -1,4 +1,8 @@
 import type { RegistrationFormData } from "./registration-form.types";
+import {
+  registrationSkipsExperienceStep,
+  registrationUsesConnectivityInsteadOfEquipment,
+} from "./registration-wizard-steps";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -21,6 +25,13 @@ const REFERRALS = new Set([
   "Poster/Flyer",
   "Radio/TV",
   "Other",
+]);
+
+const EDUCATION_LEVELS = new Set([
+  "Primary",
+  "Secondary",
+  "Tertiary Undergrad",
+  "Tertiary Postgrad",
 ]);
 
 /**
@@ -55,30 +66,39 @@ export function getValidationErrors(data: RegistrationFormData): string[] {
   if (!data.status?.trim() || !STATUSES.has(data.status.trim())) {
     errors.push("Select your current status.");
   }
-  if (data.status?.trim() === "Student" && !data.educationLevel?.trim()) {
-    errors.push("Education level is required when you are a student.");
+  if (data.status?.trim() === "Student") {
+    if (!data.educationLevel?.trim()) {
+      errors.push("Education level is required when you are a student.");
+    } else if (!EDUCATION_LEVELS.has(data.educationLevel.trim())) {
+      errors.push("Select a valid education level.");
+    }
   }
+
   if (!data.deviceUsed?.trim() || !DEVICES.has(data.deviceUsed.trim())) {
     errors.push("Select the device you will use.");
   }
-  if (!data.familiarWith3D?.trim() || !YNL.has(data.familiarWith3D.trim())) {
-    errors.push("Answer whether you are familiar with 3D software.");
+
+  const skipExperience = registrationSkipsExperienceStep(data.departmentId);
+  if (!skipExperience) {
+    if (!data.familiarWith3D?.trim() || !YNL.has(data.familiarWith3D.trim())) {
+      errors.push("Answer whether you are familiar with 3D software.");
+    }
+    if (!data.familiarWithPhotoshop?.trim() || !YNL.has(data.familiarWithPhotoshop.trim())) {
+      errors.push("Answer whether you are familiar with Photoshop.");
+    }
   }
-  if (!data.familiarWithPhotoshop?.trim() || !YNL.has(data.familiarWithPhotoshop.trim())) {
-    errors.push("Answer whether you are familiar with Photoshop.");
+
+  if (!registrationUsesConnectivityInsteadOfEquipment(data.courseId)) {
+    if (!data.hasGraphicsTablet?.trim() || !YES_NO.has(data.hasGraphicsTablet.trim())) {
+      errors.push("Indicate if you have a graphics tablet (Yes or No).");
+    }
   }
-  if (!data.hasGraphicsTablet?.trim() || !YES_NO.has(data.hasGraphicsTablet.trim())) {
-    errors.push("Indicate if you have a graphics tablet (Yes or No).");
-  }
+
   if (!data.hasInternet?.trim() || !YES_NO.has(data.hasInternet.trim())) {
     errors.push("Indicate if you have reliable internet (Yes or No).");
   }
   if (!data.howHeardAbout?.trim() || !REFERRALS.has(data.howHeardAbout.trim())) {
     errors.push("Select how you heard about us.");
-  }
-
-  if (!Array.isArray(data.availableDays) || data.availableDays.length === 0) {
-    errors.push("Select at least one day you are available.");
   }
 
   return errors;

@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { motion } from "motion/react";
 import { useNavigate, useParams } from "react-router";
 import {
@@ -21,6 +22,12 @@ export default function DepartmentCourses() {
       </div>
     );
   }
+
+  const gallerySlides = useMemo(
+    () =>
+      department.courses.flatMap((c) => [c.image, ...(c.trialImages ?? [])]),
+    [department.courses],
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 relative overflow-hidden">
@@ -70,6 +77,25 @@ export default function DepartmentCourses() {
           </div>
         </motion.div>
 
+        <motion.div
+          className="mb-10 -mx-1 px-1"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+        >
+          <p className="text-sm text-slate-500 mb-3">Course gallery — scroll sideways</p>
+          <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 scroll-smooth">
+            {gallerySlides.map((src, i) => (
+              <img
+                key={`${src}-${i}`}
+                src={src}
+                alt=""
+                className="h-28 w-44 sm:h-32 sm:w-52 shrink-0 rounded-xl object-cover snap-start border border-slate-800 shadow-md"
+              />
+            ))}
+          </div>
+        </motion.div>
+
         {/* Courses Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {department.courses.map((course, index) => (
@@ -86,9 +112,15 @@ export default function DepartmentCourses() {
                 <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${department.gradient} rounded-t-2xl`} />
 
                 {/* Course Number Badge */}
-                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${department.gradient} mb-6 text-white font-bold text-lg`}>
+                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${department.gradient} mb-4 text-white font-bold text-lg`}>
                   {(index + 1).toString().padStart(2, "0")}
                 </div>
+
+                <img
+                  src={course.image}
+                  alt={course.name}
+                  className="w-full h-44 rounded-xl object-cover mb-4 border border-slate-800"
+                />
 
                 <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-slate-300 group-hover:bg-clip-text transition-all">
                   {course.name}
@@ -109,11 +141,8 @@ export default function DepartmentCourses() {
                     <span className="text-slate-500 text-sm">registration fee (due now)</span>
                   </div>
                   <p className="text-slate-500 text-sm mt-1">
-                    Course fee:{" "}
-                    <span className="text-white font-medium">
-                      MWK {courseFee.toLocaleString()}
-                    </span>{" "}
-                    (due at course start)
+                    <span className="text-white font-medium">MWK {courseFee.toLocaleString()}</span>
+                    <span className="text-slate-500"> course fee (due at course start)</span>
                   </p>
                 </div>
 

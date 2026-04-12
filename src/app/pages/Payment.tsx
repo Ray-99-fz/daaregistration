@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router";
 import { CheckCircle2, CreditCard, Loader2, Shield, Clock } from "lucide-react";
 import { courseFee, registrationFee, type Course, type Department } from "../data/departments";
 import { CourseMeta } from "../components/CourseMeta";
+import { BrandLogo } from "../components/BrandLogo";
 import type { RegistrationData } from "../types/registration";
 import { registrationDataToInsert } from "@/lib/registration/transforms";
 import {
@@ -102,9 +103,12 @@ export default function Payment() {
             <h1 className="text-4xl font-bold text-white mb-4">
               Registration Complete!
             </h1>
-            <p className="text-xl text-slate-300 mb-8">
-              Welcome to Digital Art Academy, {formData.firstName}!
-            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+              <BrandLogo className="h-12 w-auto shrink-0" />
+              <p className="text-xl text-slate-300 text-center sm:text-left">
+                Welcome, {formData.firstName}!
+              </p>
+            </div>
 
             <div className="bg-slate-800/50 rounded-xl p-6 mb-8 text-left">
               <h3 className="text-lg font-semibold text-white mb-4">Course Details</h3>

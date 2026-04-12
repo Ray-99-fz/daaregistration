@@ -66,3 +66,6 @@ export type RegistrationDatabaseInsert = {
   course_fee: number;
   payment_status: "Pending" | "Paid" | "Partially Paid";
 };
+
+/** Row fields sent to `/create-payment` before server adds `payment_reference` and `payment_status`. */
+export type RegistrationCreatePaymentPayload = Omit<RegistrationDatabaseInsert, "payment_status">;

@@ -1,4 +1,12 @@
-import type { RegistrationDatabaseInsert, RegistrationFormData } from "./registration-form.types";
+import type {
+  RegistrationCreatePaymentPayload,
+  RegistrationDatabaseInsert,
+  RegistrationFormData,
+} from "./registration-form.types";
+import {
+  registrationSkipsExperienceStep,
+  registrationUsesConnectivityInsteadOfEquipment,
+} from "./registration-wizard-steps";
 
 /** MWK — must match product rules and DB `registration_fee` / `course_fee` */
 export const REGISTRATION_FEE = 5000;
@@ -19,13 +27,14 @@ function normalizeOptionalText(s: string): string | null {
 /**
  * Maps camelCase UI state → snake_case `registrations` row.
  *
- * - `software_used` / `available_days`: always `string[]` (default `[]`).
+ * - `software_used`: from the form, or `[]` when the experience step is skipped.
+ * - `available_days`: always `[]` (availability step removed; column retained for the DB).
  * - `has_graphics_tablet` / `has_internet`: `"Yes"` / `"No"` → boolean.
- * - Fees: constants below; `payment_status` simulates successful checkout at submit time.
+ * - Fees: constants below; `payment_status` is set only by the payment server + PayChangu webhook.
  *
  * Throws if a value cannot be normalized to DB enums (run client-side validation first).
  */
-export function mapToDatabaseFormat(data: RegistrationFormData): RegistrationDatabaseInsert {
+export function mapToDatabaseFormat(data: RegistrationFormData): RegistrationCreatePaymentPayload {
   const age_range = data.ageRange.trim() as RegistrationDatabaseInsert["age_range"];
   if (!["11-17", "18-24", "25-34", "35+"].includes(age_range)) {
     throw new Error(`Invalid age_range: ${data.ageRange}`);
@@ -53,6 +62,9 @@ export function mapToDatabaseFormat(data: RegistrationFormData): RegistrationDat
     throw new Error(`Invalid ${label}: ${v}`);
   };
 
+  const skipExperience = registrationSkipsExperienceStep(data.departmentId);
+  const connectivityOnly = registrationUsesConnectivityInsteadOfEquipment(data.courseId);
+
   const deviceTrim = data.deviceUsed.trim();
   const deviceMap: Record<string, RegistrationDatabaseInsert["device_used"]> = {
     Desktop: "Desktop",
@@ -74,16 +86,33 @@ export function mapToDatabaseFormat(data: RegistrationFormData): RegistrationDat
   const how_heard_about = referralMap[referralTrim];
   if (!how_heard_about) throw new Error(`Invalid how_heard_about: ${data.howHeardAbout}`);
 
-  const software_used = Array.isArray(data.softwareUsed) ? [...data.softwareUsed] : [];
-  const available_days = Array.isArray(data.availableDays) ? [...data.availableDays] : [];
+  const software_used = skipExperience
+    ? []
+    : Array.isArray(data.softwareUsed)
+      ? [...data.softwareUsed]
+      : [];
+  const available_days: string[] = [];
 
   let education_level: string | null = normalizeOptionalText(data.educationLevel);
   if (status !== "Student") {
     education_level = null;
   }
 
-  const tablet_brand =
-    yesNoToBoolean(data.hasGraphicsTablet, "hasGraphicsTablet") === true
+  const familiar_with_3d: RegistrationDatabaseInsert["familiar_with_3d"] = skipExperience
+    ? "Learning"
+    : ynl(data.familiarWith3D, "familiar_with_3d");
+
+  const familiar_with_photoshop: RegistrationDatabaseInsert["familiar_with_photoshop"] = skipExperience
+    ? "Learning"
+    : ynl(data.familiarWithPhotoshop, "familiar_with_photoshop");
+
+  const has_graphics_tablet = connectivityOnly
+    ? false
+    : yesNoToBoolean(data.hasGraphicsTablet, "has_graphics_tablet");
+
+  const tablet_brand = connectivityOnly
+    ? null
+    : has_graphics_tablet === true
       ? normalizeOptionalText(data.tabletBrand)
       : null;
 
@@ -99,10 +128,10 @@ export function mapToDatabaseFormat(data: RegistrationFormData): RegistrationDat
     phone: data.phone.trim(),
     status,
     education_level,
-    familiar_with_3d: ynl(data.familiarWith3D, "familiar_with_3d"),
+    familiar_with_3d,
     software_used,
-    familiar_with_photoshop: ynl(data.familiarWithPhotoshop, "familiar_with_photoshop"),
-    has_graphics_tablet: yesNoToBoolean(data.hasGraphicsTablet, "has_graphics_tablet"),
+    familiar_with_photoshop,
+    has_graphics_tablet,
     tablet_brand,
     device_used,
     available_days,
@@ -111,7 +140,5 @@ export function mapToDatabaseFormat(data: RegistrationFormData): RegistrationDat
     opt_in_for_updates: Boolean(data.optInForUpdates),
     registration_fee: REGISTRATION_FEE,
     course_fee: COURSE_FEE,
-    /** Simulated successful payment at submission time */
-    payment_status: "Paid",
   };
 }

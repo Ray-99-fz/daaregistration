@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 import { courseFee, departments, registrationFee } from "../data/departments";
+import { BrandLogo } from "../components/BrandLogo";
 import { ArrowRight, Sparkles } from "lucide-react";
 
 export default function Landing() {
@@ -57,9 +58,9 @@ export default function Landing() {
             </span>
           </motion.div>
           
-          <h1 className="text-5xl sm:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
-            Digital Art Academy
-          </h1>
+          <div className="flex justify-center mb-6">
+            <BrandLogo className="h-14 sm:h-20 w-auto max-w-[min(100%,420px)]" />
+          </div>
           <p className="text-xl sm:text-2xl text-slate-300 max-w-3xl mx-auto">
             Transform your creative passion into professional expertise.
             <br />

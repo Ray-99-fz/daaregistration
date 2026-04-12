@@ -7,6 +7,14 @@ export interface Course {
   instructor: string;
   level: string;
   duration: string;
+  image: string;
+  /** Extra shots for gallery / horizontal scroll */
+  trialImages?: string[];
+  instructorSocials?: {
+    instagram?: string;
+    twitter?: string;
+    portfolio?: string;
+  };
 }
 
 export interface Department {
@@ -53,6 +61,12 @@ export const departments: Department[] = [
         instructor: "Rafiki Nigel Moyo",
         level: "Beginner",
         duration: "6 weeks",
+        image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+        trialImages: [
+          "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80",
+        ],
+        instructorSocials: { instagram: "https://instagram.com", portfolio: "https://www.behance.net" },
       },
       {
         id: "cinematic-vfx",
@@ -65,6 +79,12 @@ export const departments: Department[] = [
         instructor: "Matthew Lusayo Chawinga",
         level: "Intermediate - Advanced",
         duration: "8 weeks",
+        image: "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&w=800&q=80",
+        trialImages: [
+          "https://images.unsplash.com/photo-1626785774573-4b799314346d?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=800&q=80",
+        ],
+        instructorSocials: { portfolio: "https://www.behance.net" },
       },
       {
         id: "game-art-assets",
@@ -77,6 +97,11 @@ export const departments: Department[] = [
         instructor: "Mwayiwawo Kamvantope",
         level: "Beginner - Intermediate",
         duration: "8 weeks",
+        image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80",
+        trialImages: [
+          "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=800&q=80",
+        ],
       },
     ],
   },
@@ -104,6 +129,12 @@ export const departments: Department[] = [
         instructor: "Tumpale Chawinga",
         level: "Beginner",
         duration: "8 weeks",
+        image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=800&q=80",
+        trialImages: [
+          "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1513475382583-d0067c604b29?auto=format&fit=crop&w=800&q=80",
+        ],
+        instructorSocials: { instagram: "https://instagram.com" },
       },
       {
         id: "digital-portrait",
@@ -116,6 +147,12 @@ export const departments: Department[] = [
         instructor: "Tumpale Chawinga",
         level: "Beginner - Intermediate",
         duration: "8 weeks",
+        image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=800&q=80",
+        trialImages: [
+          "https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=800&q=80",
+        ],
+        instructorSocials: { instagram: "https://instagram.com", portfolio: "https://www.behance.net" },
       },
       {
         id: "character-storytelling",
@@ -128,6 +165,12 @@ export const departments: Department[] = [
         instructor: "Ovil Msampha",
         level: "Beginner - Intermediate",
         duration: "8 weeks",
+        image: "https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80",
+        trialImages: [
+          "https://images.unsplash.com/photo-1515405295579-ba7b45403062?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1513475382583-d0067c604b29?auto=format&fit=crop&w=800&q=80",
+        ],
+        instructorSocials: { twitter: "https://twitter.com", portfolio: "https://www.behance.net" },
       },
     ],
   },
@@ -155,6 +198,11 @@ export const departments: Department[] = [
         instructor: "Nyasha Mpinda",
         level: "Beginner",
         duration: "8 weeks",
+        image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=800&q=80",
+        trialImages: [
+          "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80",
+        ],
       },
       {
         id: "unity-foundations",
@@ -167,6 +215,12 @@ export const departments: Department[] = [
         instructor: "Sangwani Mkandawire",
         level: "Beginner - Intermediate",
         duration: "6 weeks",
+        image: "https://images.unsplash.com/photo-1556438064-2d7646166914?auto=format&fit=crop&w=800&q=80",
+        trialImages: [
+          "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80",
+        ],
+        instructorSocials: { portfolio: "https://github.com" },
       },
       {
         id: "godot-intermediate",
@@ -179,6 +233,12 @@ export const departments: Department[] = [
         instructor: "Kevin Thindwa",
         level: "Intermediate",
         duration: "8 weeks",
+        image: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80",
+        trialImages: [
+          "https://images.unsplash.com/photo-1556438064-2d7646166914?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80",
+        ],
+        instructorSocials: { twitter: "https://twitter.com" },
       },
     ],
   },

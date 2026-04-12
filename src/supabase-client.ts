@@ -16,15 +16,14 @@ if (!supabaseUrl?.trim() || !supabaseAnonKey?.trim()) {
  *
  * RLS is **enabled**. The anon (frontend) role is restricted as follows:
  *
- * - **INSERT** — allowed (this is how registrations are created).
- * - **SELECT, UPDATE, DELETE** — **not** available from the frontend; do not rely on
+ * - **INSERT** — may be allowed for legacy/alternate flows; the main registration + PayChangu
+ *   path persists rows via the backend API (service role), not from the browser.
+ * - **SELECT, UPDATE, DELETE** — **not** available from the frontend for typical rows; do not rely on
  *   reading rows back after insert.
  *
  * Therefore:
- * - Use only `supabase.from("registrations").insert(...)`.
- * - Do **not** call `.select()` after `.insert()` to fetch the new row — the policy
- *   may deny SELECT, and the insert can still succeed.
- * - Treat a successful insert response (no `error`) as success and show UX feedback
- *   client-side (e.g. confirmation message with the email the user typed).
+ * - When inserting from the browser, use only `supabase.from("registrations").insert(...)` and
+ *   do **not** call `.select()` after `.insert()` if SELECT is denied — the insert can still succeed.
+ * - Payment status is updated by the PayChangu webhook on the server, not from the client.
  */
 export const supabase: SupabaseClient = createClient(supabaseUrl.trim(), supabaseAnonKey.trim());
