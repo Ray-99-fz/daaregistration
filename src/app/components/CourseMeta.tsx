@@ -19,6 +19,9 @@ export function CourseMeta({ course, className = "" }: CourseMetaProps) {
       <p>
         <span className="text-slate-500">Duration:</span> {course.duration}
       </p>
+      <p>
+        <span className="text-slate-500">Delivery:</span> {course.delivery}
+      </p>
       {course.instructorSocial ? (
         <div className="w-full sm:w-auto pt-1 sm:pt-0">
           <a

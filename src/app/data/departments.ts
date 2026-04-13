@@ -22,6 +22,7 @@ export interface Course {
   instructor: string;
   level: string;
   duration: string;
+  delivery: string;
   /** Same bundled asset as `thumbnail` (kept for any legacy `course.image` usage). */
   image: string;
   /** Primary card / gallery image (bundled asset). */
@@ -76,6 +77,7 @@ export const departments: Department[] = [
         instructor: "Rafiki Nigel Moyo",
         level: "Beginner",
         duration: "6 weeks",
+        delivery: "Hybrid",
         thumbnail: introBlenderImg,
         image: introBlenderImg,
         instructorSocial: {
@@ -94,6 +96,7 @@ export const departments: Department[] = [
         instructor: "Matthew Lusayo Chawinga",
         level: "Intermediate - Advanced",
         duration: "8 weeks",
+        delivery: "Hybrid",
         thumbnail: cinematicVfxImg,
         image: cinematicVfxImg,
         instructorSocial: {
@@ -112,6 +115,7 @@ export const departments: Department[] = [
         instructor: "Mwayiwawo Kamvantope",
         level: "Beginner - Intermediate",
         duration: "8 weeks",
+        delivery: "Online",
         thumbnail: gameArtAssetsImg,
         image: gameArtAssetsImg,
         instructorSocial: {
@@ -145,6 +149,7 @@ export const departments: Department[] = [
         instructor: "Tumpale Chawinga",
         level: "Beginner",
         duration: "8 weeks",
+        delivery: "Hybrid",
         thumbnail: dynamicSketchingImg,
         image: dynamicSketchingImg,
         instructorSocial: {
@@ -163,6 +168,7 @@ export const departments: Department[] = [
         instructor: "Tumpale Chawinga",
         level: "Beginner - Intermediate",
         duration: "8 weeks",
+        delivery: "Hybrid",
         thumbnail: digitalPortraitImg,
         image: digitalPortraitImg,
         instructorSocial: {
@@ -181,6 +187,7 @@ export const departments: Department[] = [
         instructor: "Ovil Msampha",
         level: "Beginner - Intermediate",
         duration: "8 weeks",
+        delivery: "Online",
         thumbnail: characterStorytellingImg,
         image: characterStorytellingImg,
       },
@@ -210,6 +217,7 @@ export const departments: Department[] = [
         instructor: "Nyasha Mpinda",
         level: "Beginner",
         duration: "8 weeks",
+        delivery: "Hybrid",
         thumbnail: gameFundamentalsImg,
         image: gameFundamentalsImg,
         instructorSocial: {
@@ -228,6 +236,7 @@ export const departments: Department[] = [
         instructor: "Sangwani Mkandawire",
         level: "Beginner - Intermediate",
         duration: "6 weeks",
+        delivery: "Online",
         thumbnail: unityFoundationsImg,
         image: unityFoundationsImg,
       },
@@ -242,6 +251,7 @@ export const departments: Department[] = [
         instructor: "Kevin Thindwa",
         level: "Intermediate",
         duration: "8 weeks",
+        delivery: "Hybrid",
         thumbnail: godotIntermediateImg,
         image: godotIntermediateImg,
       },

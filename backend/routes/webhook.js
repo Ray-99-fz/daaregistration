@@ -28,10 +28,11 @@ router.post("/", async (req, res) => {
     const data = JSON.parse(payload);
 
     const reference = data.reference;
+    const amount = data.amount;
     const status = data.status;
 
-    if (status === "success" && reference) {
-      await supabase.from("registrations").update({ payment_status: "Paid" }).eq("payment_reference", reference);
+    if (status === "success" && reference && amount) {
+      await supabase.from("registrations").update({ payment_status: "Paid", paid_amount: amount }).eq("payment_reference", reference);
     }
 
     res.sendStatus(200);
