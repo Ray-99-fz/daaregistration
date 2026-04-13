@@ -8,12 +8,18 @@ router.post("/", async (req, res) => {
     const data = req.body ?? {};
     const payment_reference = generateReference();
 
-    const { payment_reference: _ignoreRef, payment_status: _ignoreStatus, ...rest } = data;
+    const { 
+      payment_reference: _ignoreRef, 
+      payment_status: _ignoreStatus,
+      paid_amount: _ignoreAmount, 
+      ...rest 
+    } = data;
 
     const payload = {
       ...rest,
       payment_reference,
       payment_status: "Pending",
+      paid_amount: 0,
     };
 
     const { error } = await supabase.from("registrations").insert([payload]);

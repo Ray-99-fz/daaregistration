@@ -32,7 +32,7 @@ router.post("/", async (req, res) => {
     const status = data.status;
 
     if (status === "success" && reference && amount) {
-      await supabase.from("registrations").update({ payment_status: "Paid", paid_amount: amount }).eq("payment_reference", reference);
+      await supabase.from("registrations").update({ payment_status: "Paid", paid_amount: Number(amount) }).eq("payment_reference", reference);
     }
 
     res.sendStatus(200);
