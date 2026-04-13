@@ -5,6 +5,8 @@ const generateReference = require("../utils/generateReference");
 
 router.post("/", async (req, res) => {
   try {
+    console.log("payment creation endpoint hit!")
+
     const data = req.body ?? {};
     const payment_reference = generateReference();
 
