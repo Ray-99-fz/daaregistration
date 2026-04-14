@@ -61,6 +61,7 @@ router.post("/", async (req, res) => {
     // }
 
 const data = JSON.parse(payload);
+console.log("Webhook data:", data)
 
 const reference = data.reference;
 const amount = Number(data.amount);
