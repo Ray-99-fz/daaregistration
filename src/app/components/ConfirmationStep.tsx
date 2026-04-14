@@ -138,7 +138,7 @@ export function ConfirmationStep({ data }: ConfirmationStepProps) {
               <span className="font-bold">
                 Very Important Note:
               </span> 
-              Make sure to fill in your Name and Email Input Fields on the Pay Changu Interface.
+              Make sure to fill in the Name and Email Input Fields on the Pay Changu Interface.
           </p>
         </div>
 
