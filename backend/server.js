@@ -19,7 +19,8 @@ app.use(
   })
 );
 
-app.use("/webhook", express.raw({ type: "application/json" }), webhookRoute);
+// app.use("/webhook", express.raw({ type: "application/json" }), webhookRoute);
+app.use("/webhook", express.raw({ type: "*/*" }), webhookRoute);
 
 app.use(express.json());
 app.use("/create-payment", createPaymentRoute);

@@ -8,6 +8,7 @@ const webhookSecret = process.env.PAYCHANGU_WEBHOOK_SECRET;
 router.post("/", async (req, res) => {
   try {
     console.log("Webhook hit!");
+    console.log("Webhook hit from PayChangu");
 
     const rawBody = req.body;
     const payload = Buffer.isBuffer(rawBody) ? rawBody.toString("utf8") : String(rawBody ?? "");
