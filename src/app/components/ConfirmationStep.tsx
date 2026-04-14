@@ -133,6 +133,9 @@ export function ConfirmationStep({ data }: ConfirmationStepProps) {
             <span className="font-medium text-white">{data.email}</span> with any further details about your course
             (schedule, materials, and next steps).
           </p>
+          <p className="text-sm text-slate-300">
+              Very Important Note: Make sure to fill in your Name and Email on the Pay Changu Interface.
+          </p>
         </div>
 
         {error && (
