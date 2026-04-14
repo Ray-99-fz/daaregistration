@@ -134,7 +134,7 @@ export function ConfirmationStep({ data }: ConfirmationStepProps) {
             (schedule, materials, and next steps).
           </p>
           <p className="text-sm text-slate-300">
-              Very Important Note: Make sure to fill in your Name and Email on the Pay Changu Interface.
+              <span className="font-bold">Very Important Note:</span> Make sure to fill in your Name and Email Input Fields on the Pay Changu Interface.
           </p>
         </div>
 
