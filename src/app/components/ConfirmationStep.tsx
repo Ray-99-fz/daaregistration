@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { CreditCard, Loader2 } from "lucide-react";
+import { CreditCard, Loader2, TriangleAlert } from "lucide-react";
 import { courseFee, getCourseById, registrationFee } from "../data/departments";
 import { CourseMeta } from "./CourseMeta";
 import type { RegistrationData } from "../types/registration";
@@ -133,8 +133,12 @@ export function ConfirmationStep({ data }: ConfirmationStepProps) {
             <span className="font-medium text-white">{data.email}</span> with any further details about your course
             (schedule, materials, and next steps).
           </p>
-          <p className="text-sm text-slate-300">
-              <span className="font-bold">Very Important Note:</span> Make sure to fill in your Name and Email Input Fields on the Pay Changu Interface.
+          <p className="text-sm text-slate-300 flex gap-1 items-center">
+              <TriangleAlert className="w-6 h-6 shrink-0" aria-hidden />
+              <span className="font-bold">
+                Very Important Note:
+              </span> 
+              Make sure to fill in your Name and Email Input Fields on the Pay Changu Interface.
           </p>
         </div>
 
