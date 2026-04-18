@@ -65,7 +65,9 @@ router.post("/", async (req, res) => {
 const data = JSON.parse(payload);
 console.log("Webhook data:", data)
 
-const reference = data.charge_id;
+// const reference = data.charge_id;
+const reference = data.customer?.merchant_reference_identifier;
+console.log(reference)
 const amount = Number(data.amount);
 const status = data.status;
 

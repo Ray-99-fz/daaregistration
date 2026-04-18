@@ -30,7 +30,7 @@ router.post("/", async (req, res) => {
       return res.status(500).json({ error: error.message });
     }
 
-    const paymentUrl = `https://pay.paychangu.com/SC-wiM0rC?reference=${payment_reference}`;
+    const paymentUrl = `https://pay.paychangu.com/SC-wiM0rC?merchant_reference_identifier=${payment_reference}`;
 
     res.json({ paymentUrl });
   } catch (err) {
