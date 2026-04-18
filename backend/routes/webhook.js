@@ -14,6 +14,7 @@ router.post("/", async (req, res) => {
     const payload = Buffer.isBuffer(rawBody) ? rawBody.toString("utf8") : String(rawBody ?? "");
     console.log("Headers:", req.headers);
     const signature = req.headers["signature"];
+    console.log(signature)
 
     if (!webhookSecret) {
       return res.status(500).send("Webhook not configured");
@@ -64,7 +65,7 @@ router.post("/", async (req, res) => {
 const data = JSON.parse(payload);
 console.log("Webhook data:", data)
 
-const reference = data.reference;
+const reference = data.charge_id;
 const amount = Number(data.amount);
 const status = data.status;
 
@@ -76,6 +77,8 @@ const { data: user, error } = await supabase
   .select("paid_amount, registration_fee")
   .eq("payment_reference", reference)
   .single();
+
+console.log(user)
 
 if (error || !user) {
   console.log("User not found");
