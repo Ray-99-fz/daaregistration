@@ -63,15 +63,33 @@ router.post("/", async (req, res) => {
     // }
 
 const data = JSON.parse(payload);
-console.log("Webhook data:", data)
+console.log("Webhook data:", data);
 
-// const reference = data.charge_id;
-const reference = data.customer?.merchant_reference_identifier;
-console.log(reference)
+// ✅ correct reference
+const reference = data.tx_ref;
+console.log("tx_ref:", reference);
+
 const amount = Number(data.amount);
-const status = data.status;
+console.log("amount:", amount);
 
-if (status !== "success" || !reference || !amount) return;
+const status = data.status;
+console.log("status:", status);
+
+// ✅ better validation
+if (status !== "success") {
+  console.log("Payment not successful");
+  return res.sendStatus(200);
+}
+
+if (!reference) {
+  console.log("Missing tx_ref");
+  return res.sendStatus(200);
+}
+
+if (!amount) {
+  console.log("Missing amount");
+  return res.sendStatus(200);
+}
 
 // 1. Get current record
 const { data: user, error } = await supabase
@@ -80,11 +98,9 @@ const { data: user, error } = await supabase
   .eq("payment_reference", reference)
   .single();
 
-console.log(user)
-
 if (error || !user) {
-  console.log("User not found");
-  return;
+  console.log("User not found for:", reference);
+  return res.sendStatus(200);
 }
 
 // 2. Compute new total
@@ -96,10 +112,8 @@ let payment_status;
 
 if (newPaidAmount >= totalFee) {
   payment_status = "Paid";
-} else if (newPaidAmount > 0) {
-  payment_status = "Partially Paid";
 } else {
-  payment_status = "Unpaid";
+  payment_status = "Partially Paid";
 }
 
 // 4. Update DB
@@ -112,10 +126,12 @@ await supabase
   .eq("payment_reference", reference);
 
 console.log("Payment updated:", {
+  reference,
   newPaidAmount,
   payment_status
 });
-    res.sendStatus(200);
+
+res.sendStatus(200);
   } catch (err) {
     res.status(500).send("Webhook error");
   }

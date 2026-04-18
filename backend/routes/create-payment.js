@@ -2,19 +2,20 @@ const express = require("express");
 const router = express.Router();
 const supabase = require("../lib/supabase");
 const generateReference = require("../utils/generateReference");
+const fetch = require("node-fetch");
 
 router.post("/", async (req, res) => {
   try {
-    console.log("payment creation endpoint hit!")
+    console.log("payment creation endpoint hit!");
 
     const data = req.body ?? {};
     const payment_reference = generateReference();
 
-    const { 
-      payment_reference: _ignoreRef, 
+    const {
+      payment_reference: _ignoreRef,
       payment_status: _ignoreStatus,
-      paid_amount: _ignoreAmount, 
-      ...rest 
+      paid_amount: _ignoreAmount,
+      ...rest
     } = data;
 
     const payload = {
@@ -24,18 +25,73 @@ router.post("/", async (req, res) => {
       paid_amount: 0,
     };
 
-    const { error } = await supabase.from("registrations").insert([payload]);
+    const { error } = await supabase
+      .from("registrations")
+      .insert([payload]);
 
     if (error) {
       return res.status(500).json({ error: error.message });
     }
 
-    const paymentUrl = `https://pay.paychangu.com/SC-wiM0rC?merchant_reference_identifier=${payment_reference}`;
+    // 🔥 CALL PAYCHANGU API
+    const response = await fetch("https://api.paychangu.com/payment", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.PAYCHANGU_SECRET_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        amount: payload.registration_fee || 5000, // adjust as needed
+        currency: "MWK",
+        email: payload.email,
+        first_name: payload.first_name,
+        last_name: payload.last_name,
+        callback_url: "https://daaregistration.onrender.com/webhook",
+        return_url: "https://daaregistration.vercel.app/payment-status",
+
+        // 🔥 THIS IS THE KEY
+        tx_ref: payment_reference,
+      }),
+    });
+
+    const result = await response.json();
+
+    const paymentUrl = result?.data?.checkout_url;
+
+    if (!paymentUrl) {
+      console.error(result);
+      return res.status(500).json({ error: "Failed to get payment link" });
+    }
 
     res.json({ paymentUrl });
+
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "Failed to create payment" });
   }
 });
 
 module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 
