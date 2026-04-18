@@ -40,8 +40,8 @@ router.post("/", async (req, res) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        // amount: payload.registration_fee || 5000,
-        amount: 100,
+        amount: payload.registration_fee || 5000,
+        // amount: 100,
         currency: "MWK",
         email: payload.email,
         first_name: payload.first_name,
