@@ -22,7 +22,7 @@ export default function PaymentStatus() {
 
   // get ref from URL
   const params = new URLSearchParams(window.location.search);
-  const ref = params.get("ref");
+  const ref = params.get("tx_ref");
 
   useEffect(() => {
     if (!ref) return;
