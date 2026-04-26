@@ -47,7 +47,8 @@ router.post("/", async (req, res) => {
         first_name: payload.first_name,
         last_name: payload.last_name,
         callback_url: "https://daaregistration.onrender.com/webhook",
-        return_url: "https://daaregistration.vercel.app/payment-status",
+        // return_url: "https://daaregistration.vercel.app/payment-status",
+        return_url: `https://daaregistration.vercel.app/payment-status?ref=${payment_reference}`,
         tx_ref: payment_reference,
       }),
     });

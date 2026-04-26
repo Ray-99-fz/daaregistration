@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 
 import createPaymentRoute from "./routes/create-payment.js";
 import webhookRoute from "./routes/webhook.js";
+import emailRoutes from "./routes/emailRoutes.js";
+import receiptRoutes from "./routes/receipt.js";
 
 dotenv.config();
 
@@ -26,6 +28,8 @@ app.use("/webhook", express.raw({ type: "*/*" }), webhookRoute);
 
 app.use(express.json());
 app.use("/create-payment", createPaymentRoute);
+app.use("/api/email", emailRoutes);
+app.use("/api/receipt", receiptRoutes);
 
 const port = Number(process.env.PORT) || 3000;
 app.listen(port, () => {

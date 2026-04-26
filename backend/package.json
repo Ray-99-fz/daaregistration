@@ -6,17 +6,26 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "start:dev": "nodemon server.js"
+    "start:dev": "nodemon --exec tsx server.js",
+    "email:dev": "email dev --dir emails"
   },
   "dependencies": {
     "@figma/my-make-file": "file:..",
+    "@react-email/components": "^1.0.12",
+    "@react-email/render": "^2.0.7",
     "@supabase/supabase-js": "^2.101.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "react-email": "^6.0.0",
+    "resend": "^6.12.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "@react-email/ui": "6.0.0",
+    "nodemon": "^3.1.14",
+    "tsx": "^4.21.0"
   },
   "type": "module"
 }
