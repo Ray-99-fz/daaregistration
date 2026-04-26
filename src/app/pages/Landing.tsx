@@ -55,7 +55,7 @@ export default function Landing() {
           >
             <Sparkles className="w-4 h-4 text-[#E31E24]" />
             <span className="text-sm text-red-100/90">
-              Registrations open for classes starting 2 May
+              Registrations open for classes starting 9 May
             </span>
           </motion.div>
           
