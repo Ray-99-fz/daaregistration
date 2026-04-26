@@ -1,7 +1,7 @@
 // backend/services/emailService.js
 import { Resend } from "resend";
 import { render } from "@react-email/render";
-import WelcomeEmail from "../emails/WelcomeEmail.jsx";
+import WelcomeEmail from "../emails/WelcomeEmail.js";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
