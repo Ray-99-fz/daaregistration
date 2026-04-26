@@ -133,14 +133,14 @@ export function ConfirmationStep({ data }: ConfirmationStepProps) {
             <span className="font-medium text-white">{data.email}</span> with any further details about your course
             (schedule, materials, and next steps).
           </p>
-          <p className="text-sm text-slate-300 lg:flex gap-1 items-center">
+          {/* <p className="text-sm text-slate-300 lg:flex gap-1 items-center">
               
               <span className="font-bold flex items-center">
                 <TriangleAlert className="w-6 h-6 shrink-0" aria-hidden />
                 Very Important Note:
               </span> 
               Make sure to fill in the Name and Email Input Fields on the Pay Changu Interface.
-          </p>
+          </p> */}
         </div>
 
         {error && (
