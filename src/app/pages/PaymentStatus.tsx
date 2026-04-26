@@ -20,21 +20,10 @@ const paymentApiBase =
 
 export default function PaymentStatus() {
   const [receipt, setReceipt] = useState<Receipt | null>(null);
-  const [status, setStatus] = useState<
-    "loading" | "success" | "failed" | "timeout"
-  >("loading");
+  const [loading, setLoading] = useState(true);
 
   const params = new URLSearchParams(window.location.search);
   const ref = params.get("tx_ref");
-
-  // ⏳ Timeout fallback (30s)
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setStatus((prev) => (prev === "loading" ? "timeout" : prev));
-    }, 30000);
-
-    return () => clearTimeout(timeout);
-  }, []);
 
   useEffect(() => {
     if (!ref) return;
@@ -44,11 +33,9 @@ export default function PaymentStatus() {
         const res = await fetch(`${paymentApiBase}/api/receipt/${ref}`);
         const data = await res.json();
 
-        if (data.status === "Paid") {
+        if (data.status !== "Pending") {
           setReceipt(data);
-          setStatus("success");
-        } else if (data.status === "Failed") {
-          setStatus("failed");
+          setLoading(false);
         }
       } catch (err) {
         console.error(err);
@@ -61,21 +48,10 @@ export default function PaymentStatus() {
     return () => clearInterval(interval);
   }, [ref]);
 
-  // 🔁 Auto redirect after success (5s)
-  useEffect(() => {
-    if (status === "success") {
-      const timer = setTimeout(() => {
-        window.location.href = "/";
-      }, 5000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [status]);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-[#1a080c] to-slate-950 relative overflow-hidden flex items-center justify-center px-4">
-
-      {/* 🔴 Background */}
+      
+      {/* 🔴 Background glow (same as landing) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className="absolute top-20 left-10 w-72 h-72 rounded-full blur-3xl bg-[#E31E24]/20"
@@ -89,70 +65,28 @@ export default function PaymentStatus() {
         />
       </div>
 
-      {/* 🔄 LOADING */}
-      {status === "loading" && (
-        <motion.div className="relative z-10 text-center text-white">
-          <div className="w-12 h-12 border-2 border-white/20 border-t-[#E31E24] rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-300">Processing your payment...</p>
-        </motion.div>
-      )}
-
-      {/* ⏳ TIMEOUT */}
-      {status === "timeout" && (
-        <motion.div className="relative z-10 text-center text-yellow-400">
-          <h2 className="text-xl font-semibold mb-2">
-            Still processing...
-          </h2>
-          <p className="text-slate-300">
-            This is taking longer than expected. Please wait or refresh.
-          </p>
-        </motion.div>
-      )}
-
-      {/* ❌ FAILED */}
-      {status === "failed" && (
-        <motion.div className="relative z-10 bg-red-500/10 border border-red-500/30 p-6 rounded-xl text-center text-red-400 max-w-md">
-          <h2 className="text-xl font-semibold mb-2">
-            Payment Failed
-          </h2>
-          <p className="text-slate-300 mb-4">
-            Something went wrong. Please try again.
-          </p>
-          <button
-            onClick={() => (window.location.href = "/")}
-            className="px-4 py-2 bg-[#E31E24] rounded-lg text-white"
-          >
-            Try Again
-          </button>
-        </motion.div>
-      )}
-
-      {/* ✅ SUCCESS ANIMATION */}
-      {status === "success" && !receipt && (
+      {/* 🔄 Loading State */}
+      {(loading || !receipt) && (
         <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", stiffness: 200 }}
-          className="relative z-10 text-center text-white"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative z-10 flex flex-col items-center text-white"
         >
-          <div className="w-20 h-20 rounded-full bg-green-500 flex items-center justify-center text-3xl mb-4 mx-auto">
-            ✓
-          </div>
-          <p className="text-lg">Payment Successful!</p>
-          <p className="text-sm text-slate-400 mt-2">
-            Preparing your receipt...
-          </p>
+          <div className="w-12 h-12 border-2 border-white/20 border-t-[#E31E24] rounded-full animate-spin mb-4" />
+          <p className="text-lg text-slate-300">Processing your payment...</p>
         </motion.div>
       )}
 
-      {/* 🧾 RECEIPT */}
-      {status === "success" && receipt && (
+      {/* 🧾 Receipt */}
+      {!loading && receipt && (
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           className="relative z-10 w-full max-w-md"
         >
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-6 text-white">
+            
+            {/* Logo */}
             <div className="flex justify-center mb-4">
               <BrandLogo className="max-h-20 object-contain" />
             </div>
@@ -164,6 +98,7 @@ export default function PaymentStatus() {
               Digital Art Academy
             </p>
 
+            {/* Details */}
             <div className="space-y-2 text-sm text-slate-300">
               <p><span className="text-slate-400">Reference:</span> {receipt.reference}</p>
               <p><span className="text-slate-400">Name:</span> {receipt.name}</p>
@@ -174,33 +109,44 @@ export default function PaymentStatus() {
             <div className="border-t border-white/10 my-4" />
 
             <div className="space-y-2 text-sm">
-              <p><span className="text-slate-400">Amount Paid:</span> MWK {receipt.paid_amount}</p>
-              <p><span className="text-slate-400">Total Fee:</span> MWK {receipt.fee}</p>
-              <p><span className="text-slate-400">Balance:</span> MWK {receipt.balance}</p>
-              <p><span className="text-slate-400">Status:</span>{" "}
-                <span className="text-green-400">{receipt.status}</span>
+              <p>
+                <span className="text-slate-400">Amount Paid:</span>{" "}
+                <span className="text-white font-medium">
+                  MWK {receipt.paid_amount}
+                </span>
+              </p>
+              <p>
+                <span className="text-slate-400">Total Fee:</span>{" "}
+                MWK {receipt.fee}
+              </p>
+              <p>
+                <span className="text-slate-400">Balance:</span>{" "}
+                MWK {receipt.balance}
+              </p>
+              <p>
+                <span className="text-slate-400">Status:</span>{" "}
+                <span className="text-green-400 font-semibold">
+                  {receipt.status}
+                </span>
               </p>
             </div>
 
+            {/* Actions */}
             <div className="mt-6 flex gap-3 print:hidden">
               <button
                 onClick={() => window.print()}
-                className="flex-1 py-2 rounded-xl bg-[#E31E24] text-white"
+                className="flex-1 py-2 rounded-xl bg-[#E31E24] hover:bg-red-600 transition text-white font-medium"
               >
                 Print
               </button>
 
               <button
                 onClick={() => (window.location.href = "/")}
-                className="flex-1 py-2 rounded-xl bg-white/10 text-white"
+                className="flex-1 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition text-white font-medium"
               >
                 Home
               </button>
             </div>
-
-            <p className="text-center text-xs text-slate-500 mt-4">
-              Redirecting to home...
-            </p>
           </div>
         </motion.div>
       )}
