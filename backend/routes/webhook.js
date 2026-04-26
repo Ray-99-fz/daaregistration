@@ -36,6 +36,7 @@ router.post("/", async (req, res) => {
     }
 
     const data = JSON.parse(payload);
+    console.log(data)
 
     const reference = data.tx_ref;
     const amount = Number(data.amount);
