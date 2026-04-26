@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { CreditCard, Loader2, TriangleAlert } from "lucide-react";
+import { CreditCard, Loader2 } from "lucide-react";
 import { courseFee, getCourseById, registrationFee } from "../data/departments";
 import { CourseMeta } from "./CourseMeta";
 import type { RegistrationData } from "../types/registration";
