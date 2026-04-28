@@ -101,6 +101,7 @@ export function ConfirmationStep({ data }: ConfirmationStepProps) {
     let payload;
     try {
       payload = mapToDatabaseFormat(form);
+      console.log(payload)
     } catch (e) {
       const message =
         e instanceof Error ? e.message : "Invalid registration data.";
@@ -132,7 +133,7 @@ export function ConfirmationStep({ data }: ConfirmationStepProps) {
     console.error(err);
 
     // fallback safety
-    window.location.href = "/registration-failed?reason=network";
+    // window.location.href = "/registration-failed?reason=network";
   } finally {
     setIsSubmitting(false);
   }
