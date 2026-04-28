@@ -9,7 +9,7 @@ import {
 } from "./registration-wizard-steps";
 
 /** MWK — must match product rules and DB `registration_fee` / `course_fee` (course fee = monthly tuition). */
-export const REGISTRATION_FEE = 5000;
+export const REGISTRATION_FEE = 0;
 export const COURSE_FEE = 50000;
 
 function yesNoToBoolean(value: string, fieldLabel: string): boolean {
