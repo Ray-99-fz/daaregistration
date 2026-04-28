@@ -16,7 +16,6 @@ import {
 import { useRegistrationSubmission } from "@/hooks/useRegistrationSubmission";
 import { REGISTRATION_FORM_DATA_KEY } from "@/hooks/useAutosaveForm";
 
-const Hello = "Ray"
 
 export default function Payment() {
   const location = useLocation();
