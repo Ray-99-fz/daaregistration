@@ -26,62 +26,117 @@ export function ConfirmationStep({ data }: ConfirmationStepProps) {
 
   const course = getCourseById(data.departmentId, data.courseId);
 
+  // const handleSubmit = async () => {
+  //   if (isSubmitting) return;
+
+  //   setError(null);
+
+  //   const form = toFormData(data);
+
+  //   if (!validateForm(form)) {
+  //     setError(getValidationErrors(form).join("\n"));
+  //     return;
+  //   }
+
+  //   setIsSubmitting(true);
+
+  //   try {
+  //     let payload;
+  //     try {
+  //       payload = mapToDatabaseFormat(form);
+  //     } catch (e) {
+  //       const message =
+  //         e instanceof Error ? e.message : "Invalid registration data.";
+  //       setError(message);
+  //       return;
+  //     }
+
+  //     const res = await fetch(`${apiBase}/create-registration`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(payload),
+  //     });
+
+  //     const result = (await res.json()) as {
+  //       redirectUrl?: string;
+  //       error?: string;
+  //     };
+
+  //     // ✅ Always redirect if backend provides a URL
+  //     if (result.redirectUrl) {
+  //       window.location.href = result.redirectUrl;
+  //       return;
+  //     }
+
+  //     // fallback (should rarely happen)
+  //     throw new Error(result.error || "Registration failed");
+
+  //   } catch (err) {
+  //     console.error(err);
+
+  //     // ✅ Fallback redirect if backend fails completely
+  //     // window.location.href = "/registration-failed?reason=network";
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+
   const handleSubmit = async () => {
-    if (isSubmitting) return;
+  if (isSubmitting) return;
 
-    setError(null);
+  setError(null);
 
-    const form = toFormData(data);
+  const form = toFormData(data);
 
-    if (!validateForm(form)) {
-      setError(getValidationErrors(form).join("\n"));
+  if (!validateForm(form)) {
+    setError(getValidationErrors(form).join("\n"));
+    return;
+  }
+
+  setIsSubmitting(true);
+
+  try {
+    let payload;
+    try {
+      payload = mapToDatabaseFormat(form);
+    } catch (e) {
+      const message =
+        e instanceof Error ? e.message : "Invalid registration data.";
+      setError(message);
       return;
     }
 
-    setIsSubmitting(true);
+    const res = await fetch(`${apiBase}/create-registration`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
 
-    try {
-      let payload;
-      try {
-        payload = mapToDatabaseFormat(form);
-      } catch (e) {
-        const message =
-          e instanceof Error ? e.message : "Invalid registration data.";
-        setError(message);
-        return;
-      }
+    const result = await res.json();
 
-      const res = await fetch(`${apiBase}/create-registration`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+    console.log("SERVER RESPONSE:", result);
 
-      const result = (await res.json()) as {
-        redirectUrl?: string;
-        error?: string;
-      };
-
-      // ✅ Always redirect if backend provides a URL
-      if (result.redirectUrl) {
-        window.location.href = result.redirectUrl;
-        return;
-      }
-
-      // fallback (should rarely happen)
-      throw new Error(result.error || "Registration failed");
-
-    } catch (err) {
-      console.error(err);
-
-      // ✅ Fallback redirect if backend fails completely
-      // window.location.href = "/registration-failed?reason=network";
-    } finally {
-      setIsSubmitting(false);
+    // ✅ Always redirect (success OR fail handled by backend)
+    if (result.redirectUrl) {
+      window.location.href = result.redirectUrl;
+      return;
     }
-  };
+
+    throw new Error(result.error || "Registration failed");
+
+  } catch (err) {
+    console.error(err);
+
+    // fallback safety
+    window.location.href = "/registration-failed?reason=network";
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <div className="space-y-6">

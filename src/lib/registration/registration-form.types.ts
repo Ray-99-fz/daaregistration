@@ -64,7 +64,8 @@ export type RegistrationDatabaseInsert = {
   opt_in_for_updates: boolean;
   registration_fee: number;
   course_fee: number;
-  payment_status: "Pending" | "Paid" | "Partially Paid";
+  reg_status: "Registered" | "Contacted" | "Enrolled";
+  // payment_status: "Pending" | "Paid" | "Partially Paid";
 };
 
 /** Row fields sent to `/create-payment` before server adds `payment_reference` and `payment_status`. */
