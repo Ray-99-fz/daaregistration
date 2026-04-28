@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
-import { courseFee, departments, registrationFee } from "../data/departments";
+import { courseFee, departments} from "../data/departments";
 import { BrandLogo } from "../components/BrandLogo";
 import { ArrowRight, Sparkles } from "lucide-react";
 
@@ -138,9 +138,10 @@ export default function Landing() {
           transition={{ delay: 0.8 }}
         >
           <p className="text-slate-400 text-sm">
-            Registration is MWK {registrationFee.toLocaleString()} (due upon registration) • Course fee is MWK{" "}
+            Registration is Free • Course fee is MWK{" "}
             {courseFee.toLocaleString()} per month (payable when classes begin) • Expert instructors • Hands-on projects
           </p>
+          {/* <p>Registration is MWK {registrationFee.toLocaleString()} (due upon registration) •</p> */}
         </motion.div>
       </div>
     </div>

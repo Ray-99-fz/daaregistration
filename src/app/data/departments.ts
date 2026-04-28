@@ -48,7 +48,7 @@ export interface Department {
 }
 
 // Pricing rules for the registration flow.
-export const registrationFee = 5000;
+// export const registrationFee = 5000;
 /** Monthly course tuition (MWK), not a single full-course lump sum. */
 export const courseFee = 50000;
 
