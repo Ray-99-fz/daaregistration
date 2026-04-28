@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import createPaymentRoute from "./routes/create-payment.js";
+// import createPaymentRoute from "./routes/create-payment.js";
+import createRegistrationRoute from "./routes/create-registration.js";
 import webhookRoute from "./routes/webhook.js";
 // import emailRoutes from "./routes/emailRoutes.js";
 import receiptRoutes from "./routes/receipt.js";
@@ -27,7 +28,7 @@ app.use(
 app.use("/webhook", express.raw({ type: "*/*" }), webhookRoute);
 
 app.use(express.json());
-app.use("/create-payment", createPaymentRoute);
+app.use("/create-registration", createRegistrationRoute);
 // app.use("/api/email", emailRoutes);
 app.use("/api/receipt", receiptRoutes);
 
