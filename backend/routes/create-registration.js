@@ -20,29 +20,38 @@ router.post("/", async (req, res) => {
       ...rest
     } = data;
 
+    // ✅ Force required DB fields
     const payload = {
       ...rest,
+
+      // REQUIRED DB FIELDS
+      registration_fee: 0,
+      course_fee: 50000, // adjust if dynamic later
+
+      // SYSTEM FIELDS
       payment_reference,
-      reg_status: "Registered", // ✅ better than "Completed"
+      reg_status: "Registered",
       paid_amount: 0,
     };
+
+    console.log("INSERT PAYLOAD:", payload);
 
     const { error } = await supabase
       .from("newregistrations")
       .insert([payload]);
 
     if (error) {
-      console.error("DB error:", error.message);
+      console.error("DB error:", error);
 
       return res.status(500).json({
-        error: "Failed to create registration",
-        // redirectUrl: `${FRONTEND_URL}/registration-failed?reason=db`,
+        error: error.message,
+        redirectUrl: `${FRONTEND_URL}/registration-failed?reason=db`,
       });
     }
 
     return res.json({
       success: true,
-      // redirectUrl: `${FRONTEND_URL}/registration-success?ref=${payment_reference}`,
+      redirectUrl: `${FRONTEND_URL}/registration-success?ref=${payment_reference}`,
     });
 
   } catch (err) {
@@ -50,12 +59,92 @@ router.post("/", async (req, res) => {
 
     return res.status(500).json({
       error: "Server error",
-      // redirectUrl: `${FRONTEND_URL}/registration-failed?reason=server`,
+      redirectUrl: `${FRONTEND_URL}/registration-failed?reason=server`,
     });
   }
 });
 
 export default router;
+
+
+
+
+
+// import express from "express";
+// import supabase from "../lib/supabase.js";
+// import generateReference from "../utils/generateReference.js";
+
+// const router = express.Router();
+
+// const FRONTEND_URL = process.env.FRONTEND_URL;
+
+// router.post("/", async (req, res) => {
+//   try {
+//     console.log("registration endpoint hit!");
+
+//     const data = req.body ?? {};
+//     const payment_reference = generateReference();
+
+//     const {
+//       payment_reference: _ignoreRef,
+//       reg_status: _ignoreStatus,
+//       paid_amount: _ignoreAmount,
+//       ...rest
+//     } = data;
+
+//     const payload = {
+//       ...rest,
+//       payment_reference,
+//       reg_status: "Registered", // ✅ better than "Completed"
+//       paid_amount: 0,
+//     };
+
+//     const { error } = await supabase
+//       .from("newregistrations")
+//       .insert([payload]);
+
+//     // if (error) {
+//     //   console.error("DB error:", error.message);
+
+//     //   return res.status(500).json({
+//     //     error: "Failed to create registration",
+//     //     // redirectUrl: `${FRONTEND_URL}/registration-failed?reason=db`,
+//     //   });
+//     // }
+
+//     if (error) {
+//       console.error("DB error FULL:", error);
+
+//       return res.status(500).json({
+//         error: error.message,
+//         details: error.details,
+//         hint: error.hint,
+//       });
+//     }
+
+//     return res.json({
+//       success: true,
+//       // redirectUrl: `${FRONTEND_URL}/registration-success?ref=${payment_reference}`,
+//     });
+
+//   } catch (err) {
+//     console.error("Server error:", err);
+
+//     return res.status(500).json({
+//       error: "Server error",
+
+//       // console.log("DB error FULL:", err);
+            
+//       error: err.message,
+//         details: err.details,
+//         hint: err.hint,
+      
+//       // redirectUrl: `${FRONTEND_URL}/registration-failed?reason=server`,
+//     });
+//   }
+// });
+
+// export default router;
 
 
 
