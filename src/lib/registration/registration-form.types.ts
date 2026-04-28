@@ -69,4 +69,8 @@ export type RegistrationDatabaseInsert = {
 };
 
 /** Row fields sent to `/create-payment` before server adds `payment_reference` and `payment_status`. */
-export type RegistrationCreatePaymentPayload = Omit<RegistrationDatabaseInsert, "payment_status">;
+// export type RegistrationCreatePaymentPayload = Omit<RegistrationDatabaseInsert, "payment_status">;
+export type RegistrationCreatePaymentPayload = Omit<
+  RegistrationDatabaseInsert,
+  "reg_status"
+>;
