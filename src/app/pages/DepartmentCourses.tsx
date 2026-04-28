@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router";
 import {
   courseFee,
   getDepartmentById,
-  registrationFee,
+  // registrationFee,
 } from "../data/departments";
 import { getDepartmentGallerySlides } from "../data/department-gallery";
 import { CourseMeta } from "../components/CourseMeta";
@@ -138,12 +138,12 @@ export default function DepartmentCourses() {
 
                 {/* Price */}
                 <div className="mb-6">
-                  <div className="flex items-center gap-2">
+                  {/* <div className="flex items-center gap-2">
                     <span className="text-3xl font-bold text-white">
                       MWK {registrationFee.toLocaleString()}
                     </span>
                     <span className="text-slate-500 text-sm">registration fee (due now)</span>
-                  </div>
+                  </div> */}
                   <p className="text-slate-500 text-sm mt-1">
                     <span className="text-white font-medium">MWK {courseFee.toLocaleString()} per month</span>
                     <span className="text-slate-500"> course fee (payable when classes begin)</span>
