@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { useLocation, useNavigate } from "react-router";
 import { CheckCircle2, CreditCard, Loader2, Shield, Clock } from "lucide-react";
-import { courseFee, registrationFee, type Course, type Department } from "../data/departments";
+import { courseFee,  type Course, type Department } from "../data/departments";
 import { CourseMeta } from "../components/CourseMeta";
 import { BrandLogo } from "../components/BrandLogo";
 import type { RegistrationData } from "../types/registration";
@@ -15,6 +15,8 @@ import {
 } from "@/lib/registration/reference-data";
 import { useRegistrationSubmission } from "@/hooks/useRegistrationSubmission";
 import { REGISTRATION_FORM_DATA_KEY } from "@/hooks/useAutosaveForm";
+
+const Hello = "Ray"
 
 export default function Payment() {
   const location = useLocation();
@@ -126,9 +128,9 @@ export default function Payment() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Amount Paid</span>
-                  <span className="text-green-400 font-bold">
-                    MWK {registrationFee.toLocaleString()}
-                  </span>
+                  {/* <span className="text-green-400 font-bold">
+                    MWK {toLocaleString()}
+                  </span> */}
                 </div>
               </div>
             </div>
@@ -244,18 +246,18 @@ export default function Payment() {
                 </div>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-slate-400">Registration Fee (due now)</span>
-                  <span className="text-white">
-                    MWK {registrationFee.toLocaleString()}
-                  </span>
+                  {/* <span className="text-white">
+                    MWK {toLocaleString()}
+                  </span> */}
                 </div>
               </div>
 
               <div className="border-t border-slate-700 pt-4">
                 <div className="flex justify-between items-center">
                   <span className="text-xl font-bold text-white">Total due today</span>
-                  <span className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-                    MWK {registrationFee.toLocaleString()}
-                  </span>
+                  {/* <span className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                    MWK {toLocaleString()}
+                  </span> */}
                 </div>
               </div>
             </motion.div>
@@ -378,9 +380,9 @@ export default function Payment() {
                 <span className="sm:hidden">
                   Pay with PayChangu
                 </span>
-                <span className="hidden sm:inline">
-                  Pay with PayChangu - MWK {registrationFee.toLocaleString()} (registration fee)
-                </span>
+                {/* <span className="hidden sm:inline">
+                  Pay with PayChangu - MWK {toLocaleString()} (registration fee)
+                </span> */}
               </>
             )}
           </motion.button>
