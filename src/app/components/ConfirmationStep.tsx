@@ -133,7 +133,7 @@ export function ConfirmationStep({ data }: ConfirmationStepProps) {
     console.error(err);
 
     // fallback safety
-    // window.location.href = "/registration-failed?reason=network";
+    window.location.href = "/registration-failed?reason=network";
   } finally {
     setIsSubmitting(false);
   }
